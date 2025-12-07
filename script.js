@@ -237,14 +237,25 @@ projectCards.forEach((card) => {
 let lbmSolver = null;
 let lbmAnimationId = null;
 
-function initLBM() {
+async function initLBM() {
   const canvas = document.getElementById('lbm-canvas');
   if (!canvas) return;
 
   const width = 600;
   const height = 300;
 
-  lbmSolver = new LBMSolver(canvas, width, height);
+  // Try to use WASM version if available, otherwise fall back to JavaScript
+  const useWASM = typeof LBMSolverWASM !== 'undefined';
+
+  if (useWASM) {
+    console.log('Using WebAssembly LBM solver');
+    lbmSolver = new LBMSolverWASM(canvas, width, height);
+    // Wait for WASM to initialize
+    await lbmSolver.initPromise;
+  } else {
+    console.log('Using JavaScript LBM solver');
+    lbmSolver = new LBMSolver(canvas, width, height);
+  }
 
   // Control elements
   const startBtn = document.getElementById('lbm-start');

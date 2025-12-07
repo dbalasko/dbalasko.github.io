@@ -364,7 +364,7 @@ public:
         val result = val::array();
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                result.call<void>("push", obstacle[i][j]);
+                result.call<void>("push", static_cast<bool>(obstacle[i][j]));
             }
         }
         return result;

@@ -290,7 +290,115 @@
             </div>
           </article>
 
-          <!-- Project 2 -->
+          <!-- Project 2: Published Paper - Cornering FS Car -->
+          <article class="project-card reveal" data-category="External aero">
+            <div class="project-media" data-parallax-media data-speed="0.22">
+              <div class="project-media-inner">
+                <div class="project-gallery" data-gallery>
+                  <!-- Replace with your own images from the paper -->
+                  <img
+                    src="cornering-fs-1.jpg"
+                    alt="Cornering FS car CFD 1"
+                    data-gallery-img
+                  />
+                  <img
+                    src="cornering-fs-2.jpg"
+                    alt="Cornering FS car CFD 2"
+                    data-gallery-img
+                  />
+                  <img
+                    src="cornering-fs-3.jpg"
+                    alt="Cornering FS car CFD 3"
+                    data-gallery-img
+                  />
+                </div>
+                <button
+                  class="gallery-nav gallery-nav-prev"
+                  type="button"
+                  data-gallery-prev
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+                <button
+                  class="gallery-nav gallery-nav-next"
+                  type="button"
+                  data-gallery-next
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+                <div class="gallery-dots" data-gallery-dots></div>
+                <div class="project-media-gradient"></div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-body">
+                <div class="project-title-row">
+                  <h3 class="project-title">
+                    Aerodynamics of a Cornering Formula Student Car
+                  </h3>
+                  <div class="project-meta">
+                    <div>Published Research</div>
+                    <div>ASME J. Fluids Eng.</div>
+                  </div>
+                </div>
+                <p class="project-role">
+                  Role: Lead researcher &amp; CFD analysis
+                </p>
+                <p class="project-desc">
+                  Published peer-reviewed research examining the aerodynamic behavior
+                  of Formula Student race cars during cornering maneuvers. CFD study
+                  investigating aerodynamic load variations, flow field changes, and
+                  performance implications under dynamic cornering conditions.
+                </p>
+                <div class="project-tags">
+                  <span class="project-tag">Published paper</span>
+                  <span class="project-tag">External aero</span>
+                  <span class="project-tag">Cornering dynamics</span>
+                </div>
+              </div>
+
+              <div class="project-details">
+                <p>
+                  This research investigated how cornering affects the aerodynamic
+                  performance of Formula Student vehicles, a critical but often
+                  overlooked aspect of race car aerodynamics. Most studies focus on
+                  straight-line performance, but significant lap time is spent in
+                  corners where aerodynamic behavior differs substantially.
+                </p>
+                <p>Key research contributions:</p>
+                <ul>
+                  <li>CFD analysis of full-vehicle aerodynamics under cornering conditions.</li>
+                  <li>Investigation of yaw angle and roll effects on downforce distribution.</li>
+                  <li>Quantification of left-right aerodynamic load imbalance during cornering.</li>
+                  <li>Flow field analysis showing wake asymmetry and ground effect variations.</li>
+                  <li>Validation against reference data and experimental measurements.</li>
+                </ul>
+                <p>
+                  The study provides insights into how cornering maneuvers alter
+                  pressure distributions, flow separation patterns, and overall
+                  aerodynamic balance—critical information for optimizing vehicle
+                  setup and design for circuit performance rather than just
+                  straight-line speed.
+                </p>
+              </div>
+
+              <div class="project-footer">
+                <div>Published in ASME Journal of Fluids Engineering</div>
+                <div class="project-links">
+                  <button class="project-link project-toggle" type="button" data-project-toggle>
+                    More details
+                    <span class="project-toggle-icon">›</span>
+                  </button>
+                  <a class="project-link" href="https://doi.org/10.1115/1.4069995" target="_blank">View paper</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3 -->
           <article class="project-card reveal" data-category="LES / transient">
             <div class="project-media" data-parallax-media data-speed="0.28">
               <div class="project-media-inner">
@@ -932,7 +1040,16 @@
     </main>
   </div>
 
-  <script src="lbm-solver.js"></script>
+  <!-- LBM Solver: Choose one option below -->
+
+  <!-- Option 1: Use WebAssembly (5-10x faster, requires compilation) -->
+  <!-- Uncomment these lines after building the WASM module: -->
+  <script src="lbm/lbm-solver-wasm.js"></script>
+  <script src="lbm/lbm-solver-wasm-wrapper.js"></script>
+
+  <!-- Option 2: Use JavaScript (default, no compilation needed) -->
+  <!-- <script src="lbm/lbm-solver.js"></script> -->
+
   <script src="script.js"></script>
 </body>
 </html>
