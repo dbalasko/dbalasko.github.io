@@ -1067,6 +1067,7 @@ footer {
 /* ---------- LBM Simulator ---------- */
 #lbm-canvas {
   width: 100%;
+  max-width: 100%;
   height: auto;
   aspect-ratio: 2 / 1;
   display: block;
@@ -1074,6 +1075,7 @@ footer {
   border-radius: 0.5rem;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  object-fit: contain;
 }
 
 .lbm-controls {
