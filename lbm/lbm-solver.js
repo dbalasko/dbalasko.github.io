@@ -104,9 +104,9 @@ class LBMSolver {
 
       case 'square':
         const size = Math.min(this.width, this.height) / 8;
-        for (let i = cx - size; i < cx + size; i++) {
-          for (let j = cy - size; j < cy + size; j++) {
-            if (i >= 0 && i < this.width && j >= 0 && j < this.height) {
+        for (let i = 0; i < this.width; i++) {
+          for (let j = 0; j < this.height; j++) {
+            if (Math.abs(i - cx) < size && Math.abs(j - cy) < size) {
               this.solid[i][j] = true;
             }
           }
