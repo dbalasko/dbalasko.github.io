@@ -25,11 +25,11 @@ class LBMSolverWASM {
       // Call the Module factory function and wait for it to initialize
       window.LBMWASMModule = await Module({
         locateFile: (path) => {
-          // Ensure WASM file is loaded from the correct location
+          // Ensure WASM file is loaded from the lbm/ directory
           if (path.endsWith('.wasm')) {
-            return path;
+            return 'lbm/' + path;
           }
-          return path;
+          return 'lbm/' + path;
         }
       });
       console.log('WASM Module factory initialized');
@@ -190,6 +190,11 @@ class LBMSolverWASM {
 
     this.ctx.putImageData(this.imageData, 0, 0);
 
+    // Draw streamlines for velocity visualization
+    if (this.visualMode === 'velocity') {
+      this.drawStreamlines();
+    }
+
     // Draw mesh grid if enabled
     if (this.showMesh) {
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -216,6 +221,77 @@ class LBMSolverWASM {
 
     // Draw colorbar
     this.drawColorbar(maxVal);
+  }
+
+  drawStreamlines() {
+    const spacing = 20;  // Distance between streamline seed points
+    const stepSize = 1.5;  // Integration step size
+    const maxSteps = 200;  // Maximum steps per streamline
+
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    this.ctx.lineWidth = 1.0;
+
+    // Get velocity and obstacle data from C++ solver
+    const uxArray = this.solver.getUx();
+    const uyArray = this.solver.getUy();
+    const obstacleArray = this.solver.getObstacle();
+
+    // Convert to JavaScript arrays for easier access
+    const ux = [];
+    const uy = [];
+    const obstacle = [];
+    const arraySize = uxArray.size ? uxArray.size() : uxArray.length;
+    for (let idx = 0; idx < arraySize; idx++) {
+      ux.push(uxArray.get ? uxArray.get(idx) : uxArray[idx]);
+      uy.push(uyArray.get ? uyArray.get(idx) : uyArray[idx]);
+      obstacle.push(obstacleArray.get ? obstacleArray.get(idx) : obstacleArray[idx]);
+    }
+    if (uxArray.delete) uxArray.delete();
+    if (uyArray.delete) uyArray.delete();
+    if (obstacleArray.delete) obstacleArray.delete();
+
+    // Create seed points in a regular grid
+    for (let x0 = spacing; x0 < this.width; x0 += spacing) {
+      for (let y0 = spacing / 2; y0 < this.height; y0 += spacing) {
+        const idx0 = Math.floor(y0) * this.width + Math.floor(x0);
+        if (obstacle[idx0]) continue;
+
+        this.ctx.beginPath();
+        let x = x0;
+        let y = y0;
+
+        // Trace streamline forward
+        for (let step = 0; step < maxSteps; step++) {
+          const i = Math.floor(x);
+          const j = Math.floor(y);
+
+          // Check bounds
+          if (i < 1 || i >= this.width - 1 || j < 1 || j >= this.height - 1) break;
+
+          const idx = j * this.width + i;
+          if (obstacle[idx]) break;
+
+          // Get velocity at current position
+          const ux_val = ux[idx];
+          const uy_val = uy[idx];
+          const speed = Math.sqrt(ux_val * ux_val + uy_val * uy_val);
+
+          if (speed < 0.001) break;  // Stop in stagnant regions
+
+          if (step === 0) {
+            this.ctx.moveTo(x, y);
+          } else {
+            this.ctx.lineTo(x, y);
+          }
+
+          // Integrate forward (Euler method)
+          x += ux_val * stepSize / speed * 3;
+          y += uy_val * stepSize / speed * 3;
+        }
+
+        this.ctx.stroke();
+      }
+    }
   }
 
   drawColorbar(maxVal) {

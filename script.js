@@ -241,8 +241,8 @@ async function initLBM() {
   const canvas = document.getElementById('lbm-canvas');
   if (!canvas) return;
 
-  const width = 600;
-  const height = 300;
+  const width = 750;  // LBM lattice resolution (balanced Re & performance)
+  const height = 375;
 
   // Try to use WASM version if available, otherwise fall back to JavaScript
   const useWASM = typeof LBMSolverWASM !== 'undefined';
@@ -266,31 +266,60 @@ async function initLBM() {
   const visualSelect = document.getElementById('lbm-visual');
   const velValue = document.getElementById('vel-value');
   const viscValue = document.getElementById('visc-value');
+  const physVelValue = document.getElementById('phys-vel-value');
+  const physDtValue = document.getElementById('phys-dt-value');
+  const timestepsPerSecDisplay = document.getElementById('timesteps-per-sec');
 
-  // Animation loop with adaptive timesteps
-  let lastFrameTime = performance.now();
-  let renderCounter = 0;
+  // Performance tracking
+  let timestepCount = 0;
+  let lastPerfUpdate = performance.now();
 
+  // Physical scaling parameters (cylinder diameter in lattice units = 2 * radius)
+  const D_lattice = 120;          // cylinder diameter in lattice units (height*0.16*2 = 375*0.16*2)
+  const D_physical = 0.1;         // cylinder diameter in meters
+  const dx = D_physical / D_lattice;  // lattice spacing in meters
+
+  // Function to update physical values display
+  function updatePhysicalValues() {
+    const u_lattice = parseFloat(velocitySlider.value);
+    const nu_lattice = parseFloat(viscositySlider.value);
+
+    // Physical velocity: u_physical = u_lattice * dx / dt
+    // From Re matching: Re = U*D/nu (both lattice and physical)
+    // So: u_physical/dx = u_lattice and nu_physical/dx^2 = nu_lattice
+    const nu_physical = nu_lattice * dx * dx;  // physical kinematic viscosity (m^2/s)
+    const dt = dx * dx / nu_lattice;           // physical timestep (s)
+    const u_physical = u_lattice * dx / dt;     // physical velocity (m/s)
+
+    physVelValue.textContent = u_physical.toFixed(3) + ' m/s';
+    physDtValue.textContent = dt.toExponential(2) + ' s';
+  }
+
+  // Animation loop
   function animate() {
     if (lbmSolver && lbmSolver.running) {
       const now = performance.now();
-      const dt = now - lastFrameTime;
 
-      // Adaptive: more steps per frame if running fast, fewer if slow
-      const stepsPerFrame = dt < 20 ? 4 : dt < 40 ? 2 : 1;
+      // Balance between physics speed and visual smoothness
+      // Target 20-30 fps rendering
+      const stepsPerFrame = 5;
 
       for (let i = 0; i < stepsPerFrame; i++) {
         lbmSolver.step();
+        timestepCount++;
       }
 
       // Render every frame for smooth visuals
-      renderCounter++;
-      if (renderCounter % 1 === 0) {
-        lbmSolver.render();
-        renderCounter = 0;
+      lbmSolver.render();
+
+      // Update performance display every 0.5 seconds
+      if (now - lastPerfUpdate > 500) {
+        const timestepsPerSec = (timestepCount / (now - lastPerfUpdate)) * 1000;
+        timestepsPerSecDisplay.textContent = Math.round(timestepsPerSec);
+        timestepCount = 0;
+        lastPerfUpdate = now;
       }
 
-      lastFrameTime = now;
       lbmAnimationId = requestAnimationFrame(animate);
     }
   }
@@ -360,6 +389,7 @@ async function initLBM() {
     const value = parseFloat(e.target.value);
     lbmSolver.setVelocity(value);
     velValue.textContent = value.toFixed(2);
+    updatePhysicalValues();
   });
 
   // Viscosity slider
@@ -367,6 +397,7 @@ async function initLBM() {
     const value = parseFloat(e.target.value);
     lbmSolver.setViscosity(value);
     viscValue.textContent = value.toFixed(3);
+    updatePhysicalValues();
   });
 
   // Visualization mode
@@ -386,8 +417,21 @@ async function initLBM() {
     }
   });
 
+  // Controls toggle
+  const controlsToggle = document.getElementById('lbm-controls-toggle');
+  const controlsPanel = document.getElementById('lbm-controls');
+  const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
+
+  controlsToggle.addEventListener('click', () => {
+    const isCollapsed = controlsPanel.classList.toggle('collapsed');
+    toggleIcon.textContent = isCollapsed ? '›' : '‹';
+  });
+
   // Initial render
   lbmSolver.render();
+
+  // Initial physical values display
+  updatePhysicalValues();
 }
 
 // Initialize LBM when DOM is ready

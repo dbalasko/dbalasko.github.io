@@ -118,7 +118,7 @@ public:
     void createCircle() {
         double cx = width * 0.25;
         double cy = height * 0.5;
-        double radius = height * 0.12;
+        double radius = height * 0.16;  // Larger for vortex shedding
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -253,15 +253,33 @@ public:
             }
         }
 
-        // Streaming step
+        // Streaming step - first copy current state to temp
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 for (int k = 0; k < 9; k++) {
-                    int inext = i + ex[k];
-                    int jnext = j + ey[k];
+                    fTemp[i][j][k] = f[i][j][k];
+                }
+            }
+        }
 
-                    if (inext >= 0 && inext < width && jnext >= 0 && jnext < height) {
-                        fTemp[inext][jnext][k] = f[i][j][k];
+        // Now stream from neighbors (pull scheme)
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (obstacle[i][j]) {
+                    // Bounce-back for obstacles
+                    std::swap(fTemp[i][j][1], fTemp[i][j][3]);
+                    std::swap(fTemp[i][j][2], fTemp[i][j][4]);
+                    std::swap(fTemp[i][j][5], fTemp[i][j][7]);
+                    std::swap(fTemp[i][j][6], fTemp[i][j][8]);
+                } else {
+                    // Stream from neighbors using pull scheme
+                    for (int k = 0; k < 9; k++) {
+                        int iprev = i - ex[k];
+                        int jprev = j - ey[k];
+
+                        if (iprev >= 0 && iprev < width && jprev >= 0 && jprev < height) {
+                            fTemp[i][j][k] = f[iprev][jprev][k];
+                        }
                     }
                 }
             }
@@ -295,30 +313,17 @@ public:
             }
         }
 
-        // Top and bottom walls - free slip
+        // Top and bottom walls - free-slip (specular reflection - only vertical component reflected)
         for (int i = 0; i < width; i++) {
-            // Top wall
-            std::swap(f[i][0][2], f[i][0][4]);
-            std::swap(f[i][0][5], f[i][0][8]);
-            std::swap(f[i][0][6], f[i][0][7]);
+            // Top wall (j=0) - bounce back only vertical components
+            std::swap(f[i][0][2], f[i][0][4]);  // swap 2 <-> 4 (vertical)
+            std::swap(f[i][0][5], f[i][0][8]);  // swap 5 <-> 8 (northeast <-> southeast)
+            std::swap(f[i][0][6], f[i][0][7]);  // swap 6 <-> 7 (northwest <-> southwest)
 
-            // Bottom wall
+            // Bottom wall (j=height-1) - bounce back only vertical components
             std::swap(f[i][height - 1][2], f[i][height - 1][4]);
             std::swap(f[i][height - 1][5], f[i][height - 1][8]);
             std::swap(f[i][height - 1][6], f[i][height - 1][7]);
-        }
-
-        // Obstacle boundaries - bounce-back
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (obstacle[i][j]) {
-                    // Bounce back
-                    std::swap(f[i][j][1], f[i][j][3]);
-                    std::swap(f[i][j][2], f[i][j][4]);
-                    std::swap(f[i][j][5], f[i][j][7]);
-                    std::swap(f[i][j][6], f[i][j][8]);
-                }
-            }
         }
     }
 
@@ -370,6 +375,26 @@ public:
         return result;
     }
 
+    val getUx() {
+        val result = val::array();
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                result.call<void>("push", ux[i][j]);
+            }
+        }
+        return result;
+    }
+
+    val getUy() {
+        val result = val::array();
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                result.call<void>("push", uy[i][j]);
+            }
+        }
+        return result;
+    }
+
     int getWidth() const { return width; }
     int getHeight() const { return height; }
 
@@ -390,6 +415,8 @@ EMSCRIPTEN_BINDINGS(lbm_module) {
         .function("getVorticity", &LBMSolver::getVorticity)
         .function("getPressure", &LBMSolver::getPressure)
         .function("getObstacle", &LBMSolver::getObstacle)
+        .function("getUx", &LBMSolver::getUx)
+        .function("getUy", &LBMSolver::getUy)
         .function("getWidth", &LBMSolver::getWidth)
         .function("getHeight", &LBMSolver::getHeight)
         .function("setRunning", &LBMSolver::setRunning)

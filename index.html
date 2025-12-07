@@ -881,8 +881,11 @@
             <div class="project-media" data-parallax-media data-speed="0.26">
               <div class="project-media-inner">
                 <!-- Interactive LBM canvas -->
-                <canvas id="lbm-canvas" width="600" height="300"></canvas>
-                <div class="lbm-controls">
+                <canvas id="lbm-canvas" width="750" height="375"></canvas>
+                <button class="lbm-controls-toggle" id="lbm-controls-toggle" aria-label="Toggle controls">
+                  <span class="lbm-toggle-icon">›</span>
+                </button>
+                <div class="lbm-controls" id="lbm-controls">
                   <div class="lbm-control-group">
                     <label>Geometry:</label>
                     <select id="lbm-geometry">
@@ -894,12 +897,21 @@
                     </select>
                   </div>
                   <div class="lbm-control-group">
-                    <label>Velocity: <span id="vel-value">0.10</span></label>
-                    <input type="range" id="lbm-velocity" min="0.02" max="0.35" step="0.01" value="0.10">
+                    <label>Velocity: <span id="vel-value">0.15</span></label>
+                    <input type="range" id="lbm-velocity" min="0.02" max="0.30" step="0.01" value="0.15">
                   </div>
                   <div class="lbm-control-group">
-                    <label>Viscosity: <span id="visc-value">0.020</span></label>
-                    <input type="range" id="lbm-viscosity" min="0.005" max="0.05" step="0.001" value="0.02">
+                    <label>Viscosity: <span id="visc-value">0.010</span></label>
+                    <input type="range" id="lbm-viscosity" min="0.005" max="0.05" step="0.001" value="0.01">
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Physical velocity: <span id="phys-vel-value">0.0 m/s</span></label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Physical Δt: <span id="phys-dt-value">0.0 s</span></label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Performance: <span id="timesteps-per-sec">0</span> steps/s</label>
                   </div>
                   <div class="lbm-control-group">
                     <label>Display:</label>
@@ -999,7 +1011,7 @@
             <p>
               If you’re working on projects involving aerodynamics, internal
               flows, or CFD workflows, feel free to reach out. I’m open to
-              collaboration, freelance work, or simply exchanging ideas about
+              collaboration, or simply exchanging ideas about
               modeling strategies and best practices.
             </p>
           </div>
@@ -1043,7 +1055,6 @@
   <!-- LBM Solver: Choose one option below -->
 
   <!-- Option 1: Use WebAssembly (5-10x faster, requires compilation) -->
-  <!-- Uncomment these lines after building the WASM module: -->
   <script src="lbm/lbm-solver-wasm.js"></script>
   <script src="lbm/lbm-solver-wasm-wrapper.js"></script>
 

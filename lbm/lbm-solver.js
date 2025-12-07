@@ -90,7 +90,7 @@ class LBMSolver {
 
     switch(type) {
       case 'circle':
-        const radius = Math.min(this.width, this.height) / 10;
+        const radius = Math.min(this.width, this.height) / 7;  // Larger for vortex shedding
         for (let i = 0; i < this.width; i++) {
           for (let j = 0; j < this.height; j++) {
             const dx = i - cx;
@@ -340,31 +340,31 @@ class LBMSolver {
       }
     }
 
-    // Top and bottom: free-slip walls (specular reflection)
+    // Top and bottom: free-slip walls (specular reflection - only vertical component reflected)
     for (let i = 0; i < this.width; i++) {
-      // Top wall - free slip (swap directions pointing into/out of wall)
-      const temp4 = this.f[i][0][4];
-      const temp7 = this.f[i][0][7];
-      const temp8 = this.f[i][0][8];
+      // Top wall - free-slip (bounce back only vertical components)
+      const temp2_t = this.f[i][0][2];
+      const temp5_t = this.f[i][0][5];
+      const temp6_t = this.f[i][0][6];
 
-      this.f[i][0][4] = this.f[i][0][2];  // swap 2 <-> 4
-      this.f[i][0][7] = this.f[i][0][6];  // swap 6 <-> 7
-      this.f[i][0][8] = this.f[i][0][5];  // swap 5 <-> 8
-      this.f[i][0][2] = temp4;
-      this.f[i][0][6] = temp7;
-      this.f[i][0][5] = temp8;
+      this.f[i][0][2] = this.f[i][0][4];  // swap 2 <-> 4 (vertical)
+      this.f[i][0][5] = this.f[i][0][8];  // swap 5 <-> 8 (northeast <-> southeast)
+      this.f[i][0][6] = this.f[i][0][7];  // swap 6 <-> 7 (northwest <-> southwest)
+      this.f[i][0][4] = temp2_t;
+      this.f[i][0][8] = temp5_t;
+      this.f[i][0][7] = temp6_t;
 
-      // Bottom wall - free slip
-      const temp2 = this.f[i][this.height - 1][2];
-      const temp5 = this.f[i][this.height - 1][5];
-      const temp6 = this.f[i][this.height - 1][6];
+      // Bottom wall - free-slip (bounce back only vertical components)
+      const temp2_b = this.f[i][this.height - 1][2];
+      const temp5_b = this.f[i][this.height - 1][5];
+      const temp6_b = this.f[i][this.height - 1][6];
 
       this.f[i][this.height - 1][2] = this.f[i][this.height - 1][4];
       this.f[i][this.height - 1][5] = this.f[i][this.height - 1][8];
       this.f[i][this.height - 1][6] = this.f[i][this.height - 1][7];
-      this.f[i][this.height - 1][4] = temp2;
-      this.f[i][this.height - 1][8] = temp5;
-      this.f[i][this.height - 1][7] = temp6;
+      this.f[i][this.height - 1][4] = temp2_b;
+      this.f[i][this.height - 1][8] = temp5_b;
+      this.f[i][this.height - 1][7] = temp6_b;
     }
   }
 
@@ -465,6 +465,11 @@ class LBMSolver {
 
     this.ctx.putImageData(this.imageData, 0, 0);
 
+    // Draw streamlines for velocity visualization
+    if (this.visualMode === 'velocity') {
+      this.drawStreamlines();
+    }
+
     // Draw mesh grid if enabled
     if (this.showMesh) {
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -491,6 +496,57 @@ class LBMSolver {
 
     // Draw colorbar
     this.drawColorbar(maxVal);
+  }
+
+  drawStreamlines() {
+    const spacing = 20;  // Distance between streamline seed points
+    const stepSize = 1.5;  // Integration step size
+    const maxSteps = 200;  // Maximum steps per streamline
+
+    this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    this.ctx.lineWidth = 1.0;
+
+    // Create seed points in a regular grid
+    for (let x0 = spacing; x0 < this.width; x0 += spacing) {
+      for (let y0 = spacing / 2; y0 < this.height; y0 += spacing) {
+        if (this.solid[Math.floor(x0)][Math.floor(y0)]) continue;
+
+        this.ctx.beginPath();
+        let x = x0;
+        let y = y0;
+        let validStart = true;
+
+        // Trace streamline forward
+        for (let step = 0; step < maxSteps; step++) {
+          const i = Math.floor(x);
+          const j = Math.floor(y);
+
+          // Check bounds
+          if (i < 1 || i >= this.width - 1 || j < 1 || j >= this.height - 1) break;
+          if (this.solid[i][j]) break;
+
+          // Get velocity at current position (simple nearest neighbor)
+          const ux = this.ux[i][j];
+          const uy = this.uy[i][j];
+          const speed = Math.sqrt(ux * ux + uy * uy);
+
+          if (speed < 0.001) break;  // Stop in stagnant regions
+
+          if (step === 0) {
+            this.ctx.moveTo(x, y);
+            if (!validStart) break;
+          } else {
+            this.ctx.lineTo(x, y);
+          }
+
+          // Integrate forward (Euler method)
+          x += ux * stepSize / speed * 3;
+          y += uy * stepSize / speed * 3;
+        }
+
+        this.ctx.stroke();
+      }
+    }
   }
 
   drawColorbar(maxVal) {
