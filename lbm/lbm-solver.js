@@ -79,7 +79,7 @@ class LBMSolver {
   setGeometry(type) {
     this.geometry = type;
     const cx = Math.floor(this.width / 4);
-    const cy = Math.floor(this.height / 2);
+    const cy = Math.floor((this.height - 1) / 2);
 
     // Clear solid flags
     for (let i = 0; i < this.width; i++) {

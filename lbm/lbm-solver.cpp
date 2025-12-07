@@ -117,7 +117,7 @@ public:
 
     void createCircle() {
         double cx = width * 0.25;
-        double cy = height * 0.5;
+        double cy = (height - 1) * 0.5;
         double radius = height * 0.16;  // Larger for vortex shedding
 
         for (int i = 0; i < width; i++) {
@@ -133,7 +133,7 @@ public:
 
     void createAirfoil() {
         double cx = width * 0.25;
-        double cy = height * 0.5;
+        double cy = (height - 1) * 0.5;
         double chord = height / 3.5;
         double thickness = 0.12;
         double angle = 5.0 * M_PI / 180.0;
@@ -163,7 +163,7 @@ public:
 
     void createSquare() {
         double cx = width * 0.25;
-        double cy = height * 0.5;
+        double cy = (height - 1) * 0.5;
         double size = height * 0.15;
 
         for (int i = 0; i < width; i++) {
@@ -177,7 +177,7 @@ public:
 
     void createFlatPlate() {
         double cx = width * 0.25;
-        double cy = height * 0.5;
+        double cy = (height - 1) * 0.5;
         double length = height * 0.25;
         double thickness = 2.5;
 
@@ -192,7 +192,7 @@ public:
 
     void createTriangle() {
         double cx = width * 0.25;
-        double cy = height * 0.5;
+        double cy = (height - 1) * 0.5;
         double triSize = height * 0.125;
 
         for (int i = 0; i < width; i++) {
