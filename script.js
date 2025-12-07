@@ -241,8 +241,8 @@ async function initLBM() {
   const canvas = document.getElementById('lbm-canvas');
   if (!canvas) return;
 
-  const width = 750;  // LBM lattice resolution (balanced Re & performance)
-  const height = 375;
+  const width = 600;  // LBM lattice resolution (balanced Re & performance)
+  const height = 300;
 
   // Try to use WASM version if available, otherwise fall back to JavaScript
   const useWASM = typeof LBMSolverWASM !== 'undefined';
@@ -275,7 +275,7 @@ async function initLBM() {
   let lastPerfUpdate = performance.now();
 
   // Physical scaling parameters (cylinder diameter in lattice units = 2 * radius)
-  const D_lattice = 120;          // cylinder diameter in lattice units (height*0.16*2 = 375*0.16*2)
+  const D_lattice = 96;           // cylinder diameter in lattice units (height*0.16*2 = 300*0.16*2)
   const D_physical = 0.1;         // cylinder diameter in meters
   const dx = D_physical / D_lattice;  // lattice spacing in meters
 
