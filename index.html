@@ -881,7 +881,7 @@
             <div class="project-media" data-parallax-media data-speed="0.26">
               <div class="project-media-inner">
                 <!-- Interactive LBM canvas -->
-                <canvas id="lbm-canvas" width="600" height="300"></canvas>
+                <canvas id="lbm-canvas" width="700" height="350"></canvas>
                 <button class="lbm-controls-toggle" id="lbm-controls-toggle" aria-label="Toggle controls">
                   <span class="lbm-toggle-icon">▼</span>
                 </button>
@@ -902,7 +902,7 @@
                   </div>
                   <div class="lbm-control-group">
                     <label>Viscosity: <span id="visc-value">0.010</span></label>
-                    <input type="range" id="lbm-viscosity" min="0.005" max="0.05" step="0.001" value="0.01">
+                    <input type="range" id="lbm-viscosity" min="0.002" max="0.05" step="0.001" value="0.01">
                   </div>
                   <div class="lbm-control-group">
                     <label>Physical velocity: <span id="phys-vel-value">0.0 m/s</span></label>
@@ -994,6 +994,121 @@
               </div>
             </div>
           </article>
+
+          <!-- Project 8: Lid-Driven Cavity Flow -->
+          <article class="project-card reveal" data-category="Code / tools">
+            <div class="project-media" data-parallax-media data-speed="0.24">
+              <div class="project-media-inner">
+                <!-- Interactive Cavity canvas -->
+                <canvas id="cavity-canvas" width="400" height="400"></canvas>
+                <button class="lbm-controls-toggle" id="cavity-controls-toggle" aria-label="Toggle controls">
+                  <span class="lbm-toggle-icon">▼</span>
+                </button>
+                <div class="lbm-controls collapsed" id="cavity-controls">
+                  <div class="lbm-control-group">
+                    <label>Lid velocity: <span id="cavity-vel-value">0.10</span></label>
+                    <input type="range" id="cavity-velocity" min="0.02" max="0.20" step="0.01" value="0.10">
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Viscosity: <span id="cavity-visc-value">0.020</span></label>
+                    <input type="range" id="cavity-viscosity" min="0.005" max="0.05" step="0.001" value="0.02">
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Reynolds number: <span id="cavity-reynolds">200</span></label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Performance: <span id="cavity-timesteps-per-sec">0</span> steps/s</label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>Display:</label>
+                    <select id="cavity-visual">
+                      <option value="velocity">Velocity magnitude</option>
+                      <option value="vorticity">Vorticity</option>
+                      <option value="pressure">Pressure</option>
+                    </select>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>
+                      <input type="checkbox" id="cavity-streamlines">
+                      Show streamlines
+                    </label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <label>
+                      <input type="checkbox" id="cavity-mesh">
+                      Show mesh
+                    </label>
+                  </div>
+                  <div class="lbm-control-group">
+                    <button id="cavity-start" class="lbm-btn">Start</button>
+                    <button id="cavity-reset" class="lbm-btn">Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="project-content">
+              <div class="project-body">
+                <div class="project-title-row">
+                  <h3 class="project-title">
+                    Lid-Driven Cavity Flow Simulator
+                  </h3>
+                  <div class="project-meta">
+                    <div>CFD Benchmark</div>
+                    <div>LBM / D2Q9</div>
+                  </div>
+                </div>
+                <p class="project-role">
+                  Role: Development &amp; implementation
+                </p>
+                <p class="project-desc">
+                  Classic CFD benchmark problem: a square cavity with a moving top wall
+                  that drives recirculation inside. Observe the formation of primary and
+                  secondary vortices at different Reynolds numbers.
+                </p>
+                <div class="project-tags">
+                  <span class="project-tag">LBM</span>
+                  <span class="project-tag">Benchmark case</span>
+                  <span class="project-tag">Interactive</span>
+                </div>
+              </div>
+
+              <div class="project-details">
+                <p>
+                  The lid-driven cavity is one of the most widely used benchmark cases
+                  for testing CFD solvers. The problem is simple to define but exhibits
+                  rich flow physics: a square cavity filled with fluid, where the top
+                  wall moves at constant velocity while all other walls remain stationary.
+                </p>
+                <p>Key features:</p>
+                <ul>
+                  <li>D2Q9 Lattice Boltzmann Method with BGK collision operator.</li>
+                  <li>Zou-He velocity boundary condition for the moving lid.</li>
+                  <li>No-slip bounce-back conditions on stationary walls.</li>
+                  <li>Adjustable lid velocity and viscosity to control Reynolds number.</li>
+                  <li>Real-time visualization of velocity, vorticity, and pressure fields.</li>
+                  <li>Formation of counter-rotating corner vortices at higher Re.</li>
+                </ul>
+                <p>
+                  At low Reynolds numbers (Re ≈ 100), you'll see a single primary vortex
+                  filling most of the cavity. As Re increases (Re ≈ 400-1000), secondary
+                  vortices appear in the bottom corners. This benchmark has been extensively
+                  studied and validated against high-resolution reference data.
+                </p>
+              </div>
+
+              <div class="project-footer">
+                <div>Classic CFD validation case</div>
+                <div class="project-links">
+                  <button class="project-link project-toggle" type="button" data-project-toggle>
+                    More details
+                    <span class="project-toggle-icon">›</span>
+                  </button>
+                  <a class="project-link" href="#" target="_blank">Code</a>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -1060,6 +1175,7 @@
 
   <!-- Option 2: Use JavaScript (default, no compilation needed) -->
   <script src="lbm/lbm-solver.js"></script>
+  <script src="lbm/lbm-cavity.js"></script>
 
   <script src="script.js"></script>
 </body>

@@ -115,7 +115,7 @@ class LBMSolver {
 
       case 'airfoil':
         // NACA 0012 - higher resolution
-        const chord = Math.min(this.width, this.height) / 3.5;
+        const chord = Math.min(this.width, this.height) / 1.5;
         const thickness = 0.12;
         const angleOfAttack = 5 * Math.PI / 180; // 5 degrees AoA
 

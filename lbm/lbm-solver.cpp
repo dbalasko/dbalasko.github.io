@@ -134,7 +134,7 @@ public:
     void createAirfoil() {
         double cx = width * 0.25;
         double cy = (height - 1) * 0.5;
-        double chord = height / 3.5;
+        double chord = height / 1.5;
         double thickness = 0.12;
         double angle = 5.0 * M_PI / 180.0;
 

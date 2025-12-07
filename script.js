@@ -241,8 +241,8 @@ async function initLBM() {
   const canvas = document.getElementById('lbm-canvas');
   if (!canvas) return;
 
-  const width = 600;  // LBM lattice resolution (balanced Re & performance)
-  const height = 300;
+  const width = 700;  // LBM lattice resolution (balanced Re & performance)
+  const height = 350;
 
   // Try to use WASM version if available, otherwise fall back to JavaScript
   const useWASM = typeof LBMSolverWASM !== 'undefined';
@@ -275,7 +275,7 @@ async function initLBM() {
   let lastPerfUpdate = performance.now();
 
   // Physical scaling parameters (cylinder diameter in lattice units = 2 * radius)
-  const D_lattice = 96;           // cylinder diameter in lattice units (height*0.16*2 = 300*0.16*2)
+  const D_lattice = 112;          // cylinder diameter in lattice units (height*0.16*2 = 350*0.16*2)
   const D_physical = 0.1;         // cylinder diameter in meters
   const dx = D_physical / D_lattice;  // lattice spacing in meters
 
@@ -439,6 +439,175 @@ if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initLBM);
 } else {
   initLBM();
+}
+
+// -------- Cavity Simulator --------
+let cavitySolver = null;
+let cavityAnimationId = null;
+
+async function initCavity() {
+  const canvas = document.getElementById('cavity-canvas');
+  if (!canvas) return;
+
+  const size = 200;  // Square cavity resolution
+  cavitySolver = new LBMCavity(canvas, size);
+
+  // Control elements
+  const startBtn = document.getElementById('cavity-start');
+  const resetBtn = document.getElementById('cavity-reset');
+  const velocitySlider = document.getElementById('cavity-velocity');
+  const viscositySlider = document.getElementById('cavity-viscosity');
+  const visualSelect = document.getElementById('cavity-visual');
+  const velValue = document.getElementById('cavity-vel-value');
+  const viscValue = document.getElementById('cavity-visc-value');
+  const reynoldsValue = document.getElementById('cavity-reynolds');
+  const timestepsPerSecDisplay = document.getElementById('cavity-timesteps-per-sec');
+
+  // Performance tracking
+  let timestepCount = 0;
+  let lastPerfUpdate = performance.now();
+
+  // Function to update Reynolds number display
+  function updateReynolds() {
+    const u = parseFloat(velocitySlider.value);
+    const nu = parseFloat(viscositySlider.value);
+    const L = size;  // Characteristic length = cavity size
+    const Re = (u * L) / nu;
+    reynoldsValue.textContent = Math.round(Re);
+  }
+
+  // Animation loop
+  function animate() {
+    if (cavitySolver && cavitySolver.running) {
+      const now = performance.now();
+
+      // Run multiple timesteps per frame for faster convergence
+      const stepsPerFrame = 5;
+
+      for (let i = 0; i < stepsPerFrame; i++) {
+        cavitySolver.step();
+        timestepCount++;
+      }
+
+      // Render every frame
+      cavitySolver.render();
+
+      // Update performance display every 0.5 seconds
+      if (now - lastPerfUpdate > 500) {
+        const timestepsPerSec = (timestepCount / (now - lastPerfUpdate)) * 1000;
+        timestepsPerSecDisplay.textContent = Math.round(timestepsPerSec);
+        timestepCount = 0;
+        lastPerfUpdate = now;
+      }
+
+      cavityAnimationId = requestAnimationFrame(animate);
+    }
+  }
+
+  // Start/Stop button
+  startBtn.addEventListener('click', () => {
+    if (!cavitySolver.running) {
+      cavitySolver.running = true;
+      startBtn.textContent = 'Stop';
+      startBtn.classList.add('running');
+      animate();
+    } else {
+      cavitySolver.running = false;
+      startBtn.textContent = 'Start';
+      startBtn.classList.remove('running');
+      if (cavityAnimationId) {
+        cancelAnimationFrame(cavityAnimationId);
+      }
+    }
+  });
+
+  // Reset button
+  resetBtn.addEventListener('click', () => {
+    const wasRunning = cavitySolver.running;
+    cavitySolver.running = false;
+    if (cavityAnimationId) {
+      cancelAnimationFrame(cavityAnimationId);
+    }
+    cavitySolver.reset();
+    cavitySolver.render();
+
+    startBtn.textContent = 'Start';
+    startBtn.classList.remove('running');
+
+    if (wasRunning) {
+      setTimeout(() => {
+        cavitySolver.running = true;
+        startBtn.textContent = 'Stop';
+        startBtn.classList.add('running');
+        animate();
+      }, 100);
+    }
+  });
+
+  // Velocity slider
+  velocitySlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    cavitySolver.setLidVelocity(value);
+    velValue.textContent = value.toFixed(2);
+    updateReynolds();
+  });
+
+  // Viscosity slider
+  viscositySlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    cavitySolver.setViscosity(value);
+    viscValue.textContent = value.toFixed(3);
+    updateReynolds();
+  });
+
+  // Visualization mode
+  visualSelect.addEventListener('change', (e) => {
+    cavitySolver.setVisualization(e.target.value);
+    if (!cavitySolver.running) {
+      cavitySolver.render();
+    }
+  });
+
+  // Streamlines toggle
+  const streamlinesCheckbox = document.getElementById('cavity-streamlines');
+  streamlinesCheckbox.addEventListener('change', (e) => {
+    cavitySolver.toggleStreamlines(e.target.checked);
+    if (!cavitySolver.running) {
+      cavitySolver.render();
+    }
+  });
+
+  // Mesh toggle
+  const meshCheckbox = document.getElementById('cavity-mesh');
+  meshCheckbox.addEventListener('change', (e) => {
+    cavitySolver.toggleMesh(e.target.checked);
+    if (!cavitySolver.running) {
+      cavitySolver.render();
+    }
+  });
+
+  // Controls toggle
+  const controlsToggle = document.getElementById('cavity-controls-toggle');
+  const controlsPanel = document.getElementById('cavity-controls');
+  const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
+
+  controlsToggle.addEventListener('click', () => {
+    const isCollapsed = controlsPanel.classList.toggle('collapsed');
+    toggleIcon.textContent = isCollapsed ? '▲' : '▼';
+  });
+
+  // Initial render
+  cavitySolver.render();
+
+  // Initial Reynolds number display
+  updateReynolds();
+}
+
+// Initialize Cavity when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCavity);
+} else {
+  initCavity();
 }
 
 // -------- Gallery per project --------
