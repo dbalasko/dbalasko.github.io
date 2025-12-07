@@ -424,7 +424,7 @@ async function initLBM() {
 
   controlsToggle.addEventListener('click', () => {
     const isCollapsed = controlsPanel.classList.toggle('collapsed');
-    toggleIcon.textContent = isCollapsed ? '›' : '‹';
+    toggleIcon.textContent = isCollapsed ? '▲' : '▼';
   });
 
   // Initial render
