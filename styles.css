@@ -112,29 +112,34 @@ img {
 }
 
 .brand-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-tertiary) 100%);
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: rgba(10, 14, 26, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   box-shadow:
-    0 4px 12px rgba(0, 212, 255, 0.3),
-    0 0 20px rgba(0, 212, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 4px 12px rgba(0, 212, 255, 0.2),
+    0 0 20px rgba(0, 212, 255, 0.1),
+    inset 0 1px 0 rgba(100, 150, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 0.75rem;
-  color: #0a0e1a;
-  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  padding: 4px;
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth);
 }
 
 .brand-mark:hover {
   transform: scale(1.08) translateY(-2px);
+  border-color: var(--accent);
   box-shadow:
-    0 6px 16px rgba(0, 212, 255, 0.4),
-    0 0 30px rgba(0, 212, 255, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 6px 16px rgba(0, 212, 255, 0.35),
+    0 0 30px rgba(0, 212, 255, 0.2),
+    inset 0 1px 0 rgba(100, 150, 255, 0.15);
+}
+
+.brand-logo {
+  width: 100%;
+  height: 100%;
 }
 
 .brand-text span:first-child {
@@ -711,6 +716,9 @@ section {
   aspect-ratio: 16 / 9;
   position: relative;
   background: #020617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Gallery */
@@ -726,7 +734,8 @@ section {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #0a0e1a;
   opacity: 0;
   transition: opacity 250ms ease-out;
 }
@@ -1073,6 +1082,61 @@ footer {
   border-radius: 0.5rem;
 }
 
+#cavity-canvas {
+  display: block;
+  margin: 0 auto;
+  background: #020617;
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 40px rgba(0, 212, 255, 0.15),
+    0 0 80px rgba(0, 150, 200, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  max-width: 85%;
+  max-height: 85%;
+  width: auto;
+  height: auto;
+  z-index: 1;
+}
+
+/* Blurred background effect for cavity */
+.project-media-inner:has(#cavity-canvas) {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 212, 255, 0.03) 0%,
+    #020617 60%
+  );
+}
+
+.project-media-inner:has(#cavity-canvas)::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(
+    circle at center,
+    rgba(0, 212, 255, 0.12) 0%,
+    rgba(0, 180, 220, 0.08) 20%,
+    rgba(0, 150, 200, 0.04) 40%,
+    transparent 70%
+  );
+  filter: blur(50px);
+  z-index: 0;
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
 .lbm-controls {
   position: absolute;
   bottom: 0.6rem;
@@ -1090,6 +1154,7 @@ footer {
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease-out, transform 300ms ease;
+  z-index: 100;
 }
 
 .project-card.expanded .lbm-controls {
@@ -1123,7 +1188,7 @@ footer {
   transition: all 200ms ease;
   opacity: 0;
   pointer-events: none;
-  z-index: 11;
+  z-index: 101;
 }
 
 .project-card.expanded .lbm-controls-toggle,

@@ -17,8 +17,8 @@ class LBMSolver {
     this.opp = [0, 3, 4, 1, 2, 7, 8, 5, 6];
 
     // Flow parameters
-    this.u0 = 0.1;  // inlet velocity (target)
-    this.nu = 0.02; // kinematic viscosity
+    this.u0 = 0.1;  // inlet velocity (target, lattice units)
+    this.nu = 0.02; // kinematic viscosity (lattice units)
     this.tau = 3 * this.nu + 0.5; // relaxation time
     this.omega = 1 / this.tau;
 
@@ -26,6 +26,12 @@ class LBMSolver {
     this.currentVelocity = 0.0;  // start from zero
     this.rampUpSteps = 500;       // ramp up over 500 steps
     this.stepCount = 0;
+
+    // Time tracking
+    this.timestep = 0;
+
+    // Physical scaling (characteristic length = object diameter)
+    this.physicalLength = 0.1;  // meters (10 cm object)
 
     // Initialize arrays
     this.f = [];      // distribution functions
@@ -47,6 +53,7 @@ class LBMSolver {
     // Reset ramp-up
     this.currentVelocity = 0.0;
     this.stepCount = 0;
+    this.timestep = 0;
 
     // Initialize arrays
     for (let i = 0; i < this.width; i++) {
@@ -317,6 +324,22 @@ class LBMSolver {
 
     // Boundary conditions
     this.applyBoundaryConditions();
+
+    // Increment timestep
+    this.timestep++;
+  }
+
+  getPhysicalTime() {
+    // Physical time calculation using convective time scale
+    // Convective time = L / U, where L is characteristic length and U is characteristic velocity
+    // For external flow around objects (airfoil, cylinder), use U ~ 10 m/s (typical wind tunnel speed)
+    const characteristicVelocity = 10.0;  // m/s (typical for wind tunnel / external aerodynamics)
+    const convectiveTime = this.physicalLength / characteristicVelocity;
+
+    // Physical time step = convective time / number of lattice points
+    const dt_phys = convectiveTime / Math.max(this.width, this.height);
+
+    return this.timestep * dt_phys;
   }
 
   applyBoundaryConditions() {

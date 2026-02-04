@@ -12,9 +12,15 @@ class LBMCavity {
     this.showStreamlines = false;
 
     // LBM parameters
-    this.lidVelocity = 0.1;  // Top wall velocity
-    this.viscosity = 0.02;   // Kinematic viscosity
+    this.lidVelocity = 0.1;  // Top wall velocity (lattice units)
+    this.viscosity = 0.02;   // Kinematic viscosity (lattice units)
     this.omega = 1 / (3 * this.viscosity + 0.5);  // Relaxation parameter
+
+    // Time tracking
+    this.timestep = 0;
+
+    // Physical scaling (assume cavity length = 1m, lid velocity based on Re)
+    this.physicalLength = 1.0;  // meters
 
     // D2Q9 lattice: separate array for each direction (like C++ code)
     // Naming: f{x}{y} where x,y in {m,0,p} = {minus, zero, plus}
@@ -94,6 +100,22 @@ class LBMCavity {
         this.rho[i][j] = 1;
       }
     }
+    this.timestep = 0;
+  }
+
+  getPhysicalTime() {
+    // Physical time step: dt_phys = (L / U) / N
+    // where L is cavity length, U is lid velocity, N is grid size
+    // Using characteristic velocity ~ 1 m/s for reasonable time scale
+    const characteristicVelocity = 1.0;  // m/s (typical for lid-driven cavity)
+    const convectiveTime = this.physicalLength / characteristicVelocity;  // L/U
+    const dt_phys = convectiveTime / this.size;  // Divide by grid size
+    return this.timestep * dt_phys;
+  }
+
+  getPhysicalVelocity() {
+    // Use characteristic velocity of 1 m/s
+    return 1.0;  // m/s
   }
 
   setLidVelocity(velocity) {
@@ -169,9 +191,10 @@ class LBMCavity {
       }
     }
 
-    // BOUNDARY CONDITIONS (exactly from C++ code)
+    // BOUNDARY CONDITIONS (exactly matching C++ reference)
+    // Moving lid at TOP (j=jmax) with velocity u in +x direction
 
-    // Left and Right walls
+    // Left and Right walls (bounce-back)
     for (let j = 1; j < jmax; j++) {
       // Left wall (i=0): bounce-back
       this.fp0S[1][j]   = this.fm0[0][j];
@@ -186,21 +209,31 @@ class LBMCavity {
 
     // Top and Bottom walls
     for (let i = 1; i < imax; i++) {
-      // Top wall (j=jmax): moving lid with velocity u
-      this.f0mS[i][jmax-1]   = this.f0p[i][jmax];
-      this.fmmS[i-1][jmax-1] = this.fpp[i][jmax] - (1/6)*u;
-      this.fpmS[i+1][jmax-1] = this.fmp[i][jmax] + (1/6)*u;
+      // Top wall (j=jmax): MOVING LID with velocity u in +x direction
+      // C++ line 159: f0pS[x][rows-2] = f0m[x][rows-1];
+      // C++ line 160: fmpS[x-1][rows-2] = fmm[x][rows-1] - (1/6)*uBC;
+      // C++ line 161: fppS[x+1][rows-2] = fpm[x][rows-1] + (1/6)*uBC;
+      this.f0pS[i][jmax-1]     = this.f0m[i][jmax];
+      this.fmpS[i-1][jmax-1]   = this.fmm[i][jmax] - (1/6)*u;
+      this.fppS[i+1][jmax-1]   = this.fpm[i][jmax] + (1/6)*u;
 
       // Bottom wall (j=0): bounce-back
-      this.f0pS[i][1]   = this.f0m[i][0];
-      this.fmpS[i-1][1] = this.fmm[i][0];
-      this.fppS[i+1][1] = this.fpm[i][0];
+      // C++ line 164: f0mS[x][1] = f0p[x][0];
+      // C++ line 165: fpmS[x+1][1] = fmp[x][0];
+      // C++ line 166: fmmS[x-1][1] = fpp[x][0];
+      this.f0mS[i][1]   = this.f0p[i][0];
+      this.fpmS[i+1][1] = this.fmp[i][0];
+      this.fmmS[i-1][1] = this.fpp[i][0];
     }
 
     // Corners: bounce-back
+    // C++ line 171: fppS[1][1] = fmm[0][0];
+    // C++ line 172: fpmS[1][rows-2] = fmp[0][rows-1];
+    // C++ line 173: fmpS[cols-2][1] = fpm[cols-1][0];
+    // C++ line 174: fmmS[cols-2][rows-2] = fpp[cols-1][rows-1];
     this.fppS[1][1]           = this.fmm[0][0];
-    this.fmpS[1][jmax-1]      = this.fpm[0][jmax];
-    this.fpmS[imax-1][1]      = this.fmp[imax][0];
+    this.fpmS[1][jmax-1]      = this.fmp[0][jmax];
+    this.fmpS[imax-1][1]      = this.fpm[imax][0];
     this.fmmS[imax-1][jmax-1] = this.fpp[imax][jmax];
 
     // Swap arrays (A <-> B)
@@ -213,6 +246,9 @@ class LBMCavity {
     [this.fpm, this.fpmS] = [this.fpmS, this.fpm];
     [this.fmp, this.fmpS] = [this.fmpS, this.fmp];
     [this.fmm, this.fmmS] = [this.fmmS, this.fmm];
+
+    // Increment timestep
+    this.timestep++;
   }
 
   render() {
@@ -304,7 +340,19 @@ class LBMCavity {
       }
     }
 
-    this.ctx.putImageData(this.imageData, 0, 0);
+    // Clear canvas and scale to fit
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Create temporary canvas for scaling
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = this.size;
+    tempCanvas.height = this.size;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.putImageData(this.imageData, 0, 0);
+
+    // Scale and draw to main canvas
+    this.ctx.imageSmoothingEnabled = false;  // Nearest-neighbor for crisp pixels
+    this.ctx.drawImage(tempCanvas, 0, 0, this.canvas.width, this.canvas.height);
 
     // Draw streamlines if enabled
     if (this.showStreamlines && this.visualMode === 'velocity') {
@@ -313,6 +361,7 @@ class LBMCavity {
 
     // Draw mesh grid if enabled
     if (this.showMesh) {
+      const scale = this.canvas.width / this.size;
       this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       this.ctx.lineWidth = 0.5;
 
@@ -320,13 +369,13 @@ class LBMCavity {
 
       for (let i = 0; i < this.size; i += gridSpacing) {
         this.ctx.beginPath();
-        this.ctx.moveTo(i, 0);
-        this.ctx.lineTo(i, this.size);
+        this.ctx.moveTo(i * scale, 0);
+        this.ctx.lineTo(i * scale, this.canvas.height);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(0, i);
-        this.ctx.lineTo(this.size, i);
+        this.ctx.moveTo(0, i * scale);
+        this.ctx.lineTo(this.canvas.width, i * scale);
         this.ctx.stroke();
       }
     }
@@ -336,12 +385,13 @@ class LBMCavity {
   }
 
   drawStreamlines() {
+    const scale = this.canvas.width / this.size;
     const spacing = Math.max(15, Math.floor(this.size / 20));
     const stepSize = 1.0;
     const maxSteps = 500;
 
     this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    this.ctx.lineWidth = 0.8;
+    this.ctx.lineWidth = 1.5;
 
     for (let x0 = spacing; x0 < this.size; x0 += spacing) {
       for (let y0 = spacing; y0 < this.size; y0 += spacing) {
@@ -361,9 +411,9 @@ class LBMCavity {
 
           if (speed < 0.001) break;
 
-          // Convert physics coordinates to canvas coordinates (flip y)
-          const canvasX = x;
-          const canvasY = this.size - 1 - y;
+          // Convert physics coordinates to canvas coordinates (flip y and scale)
+          const canvasX = x * scale;
+          const canvasY = (this.size - 1 - y) * scale;
 
           if (step === 0) {
             this.ctx.moveTo(canvasX, canvasY);
@@ -383,7 +433,7 @@ class LBMCavity {
   drawColorbar(maxVal) {
     const barWidth = 20;
     const barHeight = 150;
-    const barX = this.size - barWidth - 10;
+    const barX = this.canvas.width - barWidth - 10;
     const barY = 10;
 
     for (let i = 0; i < barHeight; i++) {

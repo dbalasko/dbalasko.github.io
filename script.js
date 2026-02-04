@@ -1,6 +1,207 @@
 // Footer year
 document.getElementById("year").textContent = new Date().getFullYear();
 
+// -------- Dynamic Project Initialization --------
+// Wait for projects to be loaded before initializing project-specific features
+window.addEventListener('projectsLoaded', function() {
+  initProjectFeatures();
+});
+
+function initProjectFeatures() {
+  // Re-initialize all project-specific features after dynamic loading
+  initFilterChips();
+  initProjectToggles();
+  initGalleries();
+  initParallaxMedia();
+  initScrollAnimations();
+  initRevealElements();
+
+  // Initialize LBM and Cavity simulators
+  initLBM();
+  initCavity();
+}
+
+// -------- Filter chip UI --------
+function initFilterChips() {
+  const chips = document.querySelectorAll(".filter-chip");
+  const projectCards = document.querySelectorAll(".project-card");
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      chips.forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+
+      const category = chip.textContent.trim();
+      projectCards.forEach((card) => {
+        const cardCat = card.getAttribute("data-category");
+        if (category === "All" || cardCat === category) {
+          card.style.display = "";
+        } else {
+          card.classList.remove("expanded");
+          card.style.display = "none";
+        }
+      });
+    });
+  });
+}
+
+// -------- Expandable project "More details" --------
+let expandedCard = null;
+
+function expandCard(card) {
+  if (!card) return;
+  card.classList.add("expanded");
+  const toggle = card.querySelector("[data-project-toggle]");
+  if (toggle) {
+    toggle.firstChild.textContent = "Less details";
+  }
+  expandedCard = card;
+  const rect = card.getBoundingClientRect();
+  const offset = rect.top + window.scrollY - 90;
+  window.scrollTo({ top: offset, behavior: "smooth" });
+}
+
+function collapseCard(card) {
+  if (!card) return;
+  card.classList.remove("expanded");
+  const toggle = card.querySelector("[data-project-toggle]");
+  if (toggle) {
+    toggle.firstChild.textContent = "More details";
+  }
+  if (expandedCard === card) {
+    expandedCard = null;
+  }
+}
+
+function initProjectToggles() {
+  const projectCards = document.querySelectorAll(".project-card");
+
+  projectCards.forEach((card) => {
+    const toggleBtn = card.querySelector("[data-project-toggle]");
+    if (!toggleBtn) return;
+
+    toggleBtn.addEventListener("click", () => {
+      const isExpanded = card.classList.contains("expanded");
+
+      if (expandedCard && expandedCard !== card) {
+        collapseCard(expandedCard);
+      }
+
+      if (isExpanded) {
+        collapseCard(card);
+      } else {
+        expandCard(card);
+      }
+    });
+  });
+}
+
+// -------- Gallery per project --------
+function initGalleries() {
+  const galleries = document.querySelectorAll("[data-gallery]");
+
+  galleries.forEach((gallery) => {
+    const imgs = gallery.querySelectorAll("[data-gallery-img]");
+    if (!imgs.length) return;
+
+    let currentIndex = 0;
+    imgs.forEach((img, idx) => {
+      if (idx === 0) {
+        img.classList.add("active");
+      } else {
+        img.classList.remove("active");
+      }
+    });
+
+    const mediaInner = gallery.closest(".project-media-inner");
+    const prevBtn = mediaInner.querySelector("[data-gallery-prev]");
+    const nextBtn = mediaInner.querySelector("[data-gallery-next]");
+    const dotsContainer = mediaInner.querySelector("[data-gallery-dots]");
+
+    const dots = [];
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = ''; // Clear existing dots
+      imgs.forEach((_, idx) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "gallery-dot" + (idx === 0 ? " active" : "");
+        dot.dataset.index = idx.toString();
+        dotsContainer.appendChild(dot);
+        dots.push(dot);
+
+        dot.addEventListener("click", () => {
+          showSlide(idx);
+        });
+      });
+    }
+
+    function showSlide(index) {
+      const maxIndex = imgs.length - 1;
+      if (index < 0) index = maxIndex;
+      if (index > maxIndex) index = 0;
+      currentIndex = index;
+
+      imgs.forEach((img, idx) => {
+        img.classList.toggle("active", idx === currentIndex);
+      });
+
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle("active", idx === currentIndex);
+      });
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        showSlide(currentIndex - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        showSlide(currentIndex + 1);
+      });
+    }
+  });
+}
+
+// -------- Parallax for project media --------
+function initParallaxMedia() {
+  const parallaxMediaEls = document.querySelectorAll("[data-parallax-media]");
+
+  function updateProjectParallax() {
+    parallaxMediaEls.forEach((wrapper) => {
+      const speed = parseFloat(wrapper.getAttribute("data-speed")) || 0.2;
+      const rect = wrapper.getBoundingClientRect();
+      const center = window.innerHeight / 2;
+      const offset = (rect.top + rect.height / 2 - center) / center;
+      wrapper.style.transform = `translate3d(0, ${offset * -20 * speed}px, 0)`;
+    });
+  }
+
+  window.addEventListener("scroll", updateProjectParallax, { passive: true });
+  updateProjectParallax();
+}
+
+// -------- Reveal elements observer --------
+function initRevealElements() {
+  const revealEls = document.querySelectorAll(".reveal:not(.visible)");
+  const revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.16,
+    }
+  );
+  revealEls.forEach((el) => revealObserver.observe(el));
+}
+
 // -------- Apple-style scroll animations --------
 function initScrollAnimations() {
   const projectCards = document.querySelectorAll(".project-card");
@@ -164,75 +365,6 @@ function updateParallax() {
 window.addEventListener("scroll", onScroll, { passive: true });
 updateParallax(); // initial
 
-// -------- Filter chip UI (basic) --------
-const chips = document.querySelectorAll(".filter-chip");
-const projectCards = document.querySelectorAll(".project-card");
-
-chips.forEach((chip) => {
-  chip.addEventListener("click", () => {
-    chips.forEach((c) => c.classList.remove("active"));
-    chip.classList.add("active");
-
-    const category = chip.textContent.trim();
-    projectCards.forEach((card) => {
-      const cardCat = card.getAttribute("data-category");
-      if (category === "All" || cardCat === category) {
-        card.style.display = "";
-      } else {
-        card.classList.remove("expanded");
-        card.style.display = "none";
-      }
-    });
-  });
-});
-
-// -------- Expandable project "More details" --------
-let expandedCard = null;
-
-function expandCard(card) {
-  if (!card) return;
-  card.classList.add("expanded");
-  const toggle = card.querySelector("[data-project-toggle]");
-  if (toggle) {
-    toggle.firstChild.textContent = "Less details";
-  }
-  expandedCard = card;
-  const rect = card.getBoundingClientRect();
-  const offset = rect.top + window.scrollY - 90; // account for navbar
-  window.scrollTo({ top: offset, behavior: "smooth" });
-}
-
-function collapseCard(card) {
-  if (!card) return;
-  card.classList.remove("expanded");
-  const toggle = card.querySelector("[data-project-toggle]");
-  if (toggle) {
-    toggle.firstChild.textContent = "More details";
-  }
-  if (expandedCard === card) {
-    expandedCard = null;
-  }
-}
-
-projectCards.forEach((card) => {
-  const toggleBtn = card.querySelector("[data-project-toggle]");
-  if (!toggleBtn) return;
-
-  toggleBtn.addEventListener("click", () => {
-    const isExpanded = card.classList.contains("expanded");
-
-    if (expandedCard && expandedCard !== card) {
-      collapseCard(expandedCard);
-    }
-
-    if (isExpanded) {
-      collapseCard(card);
-    } else {
-      expandCard(card);
-    }
-  });
-});
-
 // -------- LBM Simulator --------
 let lbmSolver = null;
 let lbmAnimationId = null;
@@ -269,6 +401,7 @@ async function initLBM() {
   const physVelValue = document.getElementById('phys-vel-value');
   const physDtValue = document.getElementById('phys-dt-value');
   const timestepsPerSecDisplay = document.getElementById('timesteps-per-sec');
+  const lbmPhysicalTimeDisplay = document.getElementById('lbm-physical-time');
 
   // Performance tracking
   let timestepCount = 0;
@@ -316,6 +449,11 @@ async function initLBM() {
       if (now - lastPerfUpdate > 500) {
         const timestepsPerSec = (timestepCount / (now - lastPerfUpdate)) * 1000;
         timestepsPerSecDisplay.textContent = Math.round(timestepsPerSec);
+
+        // Update physical time
+        const physTime = lbmSolver.getPhysicalTime();
+        lbmPhysicalTimeDisplay.textContent = physTime.toFixed(3) + ' s';
+
         timestepCount = 0;
         lastPerfUpdate = now;
       }
@@ -350,6 +488,11 @@ async function initLBM() {
     }
     lbmSolver.reset();
     lbmSolver.render();
+
+    // Reset displays
+    timestepsPerSecDisplay.textContent = '0';
+    lbmPhysicalTimeDisplay.textContent = '0.000 s';
+    timestepCount = 0;
 
     startBtn.textContent = 'Start';
     startBtn.classList.remove('running');
@@ -410,35 +553,31 @@ async function initLBM() {
 
   // Mesh toggle
   const meshCheckbox = document.getElementById('lbm-mesh');
-  meshCheckbox.addEventListener('change', (e) => {
-    lbmSolver.toggleMesh(e.target.checked);
-    if (!lbmSolver.running) {
-      lbmSolver.render();
-    }
-  });
+  if (meshCheckbox) {
+    meshCheckbox.addEventListener('change', (e) => {
+      lbmSolver.toggleMesh(e.target.checked);
+      if (!lbmSolver.running) {
+        lbmSolver.render();
+      }
+    });
+  }
 
   // Controls toggle
   const controlsToggle = document.getElementById('lbm-controls-toggle');
   const controlsPanel = document.getElementById('lbm-controls');
-  const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
-
-  controlsToggle.addEventListener('click', () => {
-    const isCollapsed = controlsPanel.classList.toggle('collapsed');
-    toggleIcon.textContent = isCollapsed ? '▲' : '▼';
-  });
+  if (controlsToggle && controlsPanel) {
+    const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
+    controlsToggle.addEventListener('click', () => {
+      const isCollapsed = controlsPanel.classList.toggle('collapsed');
+      toggleIcon.textContent = isCollapsed ? '▲' : '▼';
+    });
+  }
 
   // Initial render
   lbmSolver.render();
 
   // Initial physical values display
   updatePhysicalValues();
-}
-
-// Initialize LBM when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initLBM);
-} else {
-  initLBM();
 }
 
 // -------- Cavity Simulator --------
@@ -462,6 +601,7 @@ async function initCavity() {
   const viscValue = document.getElementById('cavity-visc-value');
   const reynoldsValue = document.getElementById('cavity-reynolds');
   const timestepsPerSecDisplay = document.getElementById('cavity-timesteps-per-sec');
+  const physicalTimeDisplay = document.getElementById('cavity-physical-time');
 
   // Performance tracking
   let timestepCount = 0;
@@ -496,6 +636,11 @@ async function initCavity() {
       if (now - lastPerfUpdate > 500) {
         const timestepsPerSec = (timestepCount / (now - lastPerfUpdate)) * 1000;
         timestepsPerSecDisplay.textContent = Math.round(timestepsPerSec);
+
+        // Update physical time
+        const physTime = cavitySolver.getPhysicalTime();
+        physicalTimeDisplay.textContent = physTime.toFixed(3) + ' s';
+
         timestepCount = 0;
         lastPerfUpdate = now;
       }
@@ -530,6 +675,11 @@ async function initCavity() {
     }
     cavitySolver.reset();
     cavitySolver.render();
+
+    // Reset displays
+    timestepsPerSecDisplay.textContent = '0';
+    physicalTimeDisplay.textContent = '0.000 s';
+    timestepCount = 0;
 
     startBtn.textContent = 'Start';
     startBtn.classList.remove('running');
@@ -570,31 +720,36 @@ async function initCavity() {
 
   // Streamlines toggle
   const streamlinesCheckbox = document.getElementById('cavity-streamlines');
-  streamlinesCheckbox.addEventListener('change', (e) => {
-    cavitySolver.toggleStreamlines(e.target.checked);
-    if (!cavitySolver.running) {
-      cavitySolver.render();
-    }
-  });
+  if (streamlinesCheckbox) {
+    streamlinesCheckbox.addEventListener('change', (e) => {
+      cavitySolver.toggleStreamlines(e.target.checked);
+      if (!cavitySolver.running) {
+        cavitySolver.render();
+      }
+    });
+  }
 
   // Mesh toggle
   const meshCheckbox = document.getElementById('cavity-mesh');
-  meshCheckbox.addEventListener('change', (e) => {
-    cavitySolver.toggleMesh(e.target.checked);
-    if (!cavitySolver.running) {
-      cavitySolver.render();
-    }
-  });
+  if (meshCheckbox) {
+    meshCheckbox.addEventListener('change', (e) => {
+      cavitySolver.toggleMesh(e.target.checked);
+      if (!cavitySolver.running) {
+        cavitySolver.render();
+      }
+    });
+  }
 
   // Controls toggle
   const controlsToggle = document.getElementById('cavity-controls-toggle');
   const controlsPanel = document.getElementById('cavity-controls');
-  const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
-
-  controlsToggle.addEventListener('click', () => {
-    const isCollapsed = controlsPanel.classList.toggle('collapsed');
-    toggleIcon.textContent = isCollapsed ? '▲' : '▼';
-  });
+  if (controlsToggle && controlsPanel) {
+    const toggleIcon = controlsToggle.querySelector('.lbm-toggle-icon');
+    controlsToggle.addEventListener('click', () => {
+      const isCollapsed = controlsPanel.classList.toggle('collapsed');
+      toggleIcon.textContent = isCollapsed ? '▲' : '▼';
+    });
+  }
 
   // Initial render
   cavitySolver.render();
@@ -602,76 +757,3 @@ async function initCavity() {
   // Initial Reynolds number display
   updateReynolds();
 }
-
-// Initialize Cavity when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCavity);
-} else {
-  initCavity();
-}
-
-// -------- Gallery per project --------
-const galleries = document.querySelectorAll("[data-gallery]");
-
-galleries.forEach((gallery) => {
-  const imgs = gallery.querySelectorAll("[data-gallery-img]");
-  if (!imgs.length) return;
-
-  let currentIndex = 0;
-  imgs.forEach((img, idx) => {
-    if (idx === 0) {
-      img.classList.add("active");
-    } else {
-      img.classList.remove("active");
-    }
-  });
-
-  const mediaInner = gallery.closest(".project-media-inner");
-  const prevBtn = mediaInner.querySelector("[data-gallery-prev]");
-  const nextBtn = mediaInner.querySelector("[data-gallery-next]");
-  const dotsContainer = mediaInner.querySelector("[data-gallery-dots]");
-
-  const dots = [];
-
-  if (dotsContainer) {
-    imgs.forEach((_, idx) => {
-      const dot = document.createElement("button");
-      dot.type = "button";
-      dot.className = "gallery-dot" + (idx === 0 ? " active" : "");
-      dot.dataset.index = idx.toString();
-      dotsContainer.appendChild(dot);
-      dots.push(dot);
-
-      dot.addEventListener("click", () => {
-        showSlide(idx);
-      });
-    });
-  }
-
-  function showSlide(index) {
-    const maxIndex = imgs.length - 1;
-    if (index < 0) index = maxIndex;
-    if (index > maxIndex) index = 0;
-    currentIndex = index;
-
-    imgs.forEach((img, idx) => {
-      img.classList.toggle("active", idx === currentIndex);
-    });
-
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle("active", idx === currentIndex);
-    });
-  }
-
-  if (prevBtn) {
-    prevBtn.addEventListener("click", () => {
-      showSlide(currentIndex - 1);
-    });
-  }
-
-  if (nextBtn) {
-    nextBtn.addEventListener("click", () => {
-      showSlide(currentIndex + 1);
-    });
-  }
-});
