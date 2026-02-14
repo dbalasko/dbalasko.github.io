@@ -13,7 +13,8 @@ const allProjects = [
   projectCavityFlow,
   projectSupersonicRamp,
   projectAdjointOptimisation,
-  projectF1DrsAlpine
+  projectF1DrsAlpine,
+  projectLavalNozzle
 ];
 
 // Export for use in renderer
