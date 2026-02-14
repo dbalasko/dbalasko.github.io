@@ -13,7 +13,7 @@ const projectF1DrsAlpine = {
   },
 
   title: 'Alpine F1 DRS Philosophy: Innovation or Compromise?',
-  meta: ['OpenFOAM', 'Transient LES'],
+  meta: ['STAR-CCM+', 'Transient LES'],
   role: 'Role: transient LES setup, wing motion modeling & aero analysis',
 
   description: `Transient LES comparison of two F1 rear wing DRS concepts: conventional

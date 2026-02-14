@@ -14,7 +14,9 @@ const allProjects = [
   projectSupersonicRamp,
   projectAdjointOptimisation,
   projectF1DrsAlpine,
-  projectLavalNozzle
+  projectLavalNozzle,
+  projectSupersonicJet,
+  projectRayleighBenard
 ];
 
 // Export for use in renderer
