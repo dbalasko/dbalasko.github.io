@@ -11,7 +11,8 @@ const allProjects = [
   projectParaviewAutomation,
   projectLbmInteractive,
   projectCavityFlow,
-  projectSupersonicRamp
+  projectSupersonicRamp,
+  projectAdjointOptimisation
 ];
 
 // Export for use in renderer

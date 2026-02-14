@@ -7,9 +7,12 @@ const projectCorneringFs = {
   media: {
     type: 'gallery',
     images: [
-      { src: 'cornering-fs-1.jpg', alt: 'Cornering FS car CFD 1' },
-      { src: 'cornering-fs-2.jpg', alt: 'Cornering FS car CFD 2' },
-      { src: 'cornering-fs-3.jpg', alt: 'Cornering FS car CFD 3' }
+      { src: 'projects/figs/fe-25-1243_f007.png', alt: 'Pressure distribution under yaw' },
+      { src: 'projects/figs/fe-25-1243_f005.png', alt: 'Cornering aerodynamics analysis' },
+      { src: 'projects/figs/fe-25-1243_f006.png', alt: 'Flow field comparison' },
+      { src: 'projects/figs/fe-25-1243_f010.png', alt: 'Wake asymmetry visualization' },
+      { src: 'projects/figs/fe-25-1243_f011.png', alt: 'Downforce distribution analysis' },
+      { src: 'projects/figs/fe-25-1243_f016.png', alt: 'Aerodynamic load imbalance' }
     ]
   },
 
