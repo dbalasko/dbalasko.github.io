@@ -12,7 +12,8 @@ const allProjects = [
   projectLbmInteractive,
   projectCavityFlow,
   projectSupersonicRamp,
-  projectAdjointOptimisation
+  projectAdjointOptimisation,
+  projectF1DrsAlpine
 ];
 
 // Export for use in renderer

@@ -87,17 +87,30 @@ const ProjectsRenderer = {
 
   /**
    * Renders a gallery with navigation
-   * @param {Array} images - Array of image objects with src and alt
+   * @param {Array} images - Array of image/video objects with src and alt
    * @returns {string} HTML string for the gallery
    */
   renderGallery(images) {
-    const imagesHtml = images.map(img =>
-      `<img
+    const imagesHtml = images.map(img => {
+      const isVideo = /\.(mp4|webm|mov)$/i.test(img.src);
+
+      if (isVideo) {
+        return `<video
+                    src="${img.src}"
+                    data-gallery-img
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                  ></video>`;
+      } else {
+        return `<img
                     src="${img.src}"
                     alt="${img.alt}"
                     data-gallery-img
-                  />`
-    ).join('\n                  ');
+                  />`;
+      }
+    }).join('\n                  ');
 
     return `
                 <div class="project-gallery" data-gallery>
