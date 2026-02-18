@@ -12,7 +12,7 @@ const project2dSolver = {
     ]
   },
 
-  title: '2D unsteady CFD solver (FVM, C++)',
+  title: '2D unsteady CFD solver (FVM, C++) Work In Progress',
   meta: ['C++', 'In-house code'],
   role: 'Role: numerical implementation',
 
