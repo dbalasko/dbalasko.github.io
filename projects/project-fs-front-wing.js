@@ -13,7 +13,7 @@ const projectFsFrontWing = {
     ]
   },
 
-  title: 'Formula Student front wing aerodynamics',
+  title: 'Formula Student front wing aerodynamics Coming Soon',
   meta: ['STAR-CCM+', 'Steady RANS'],
   role: 'Role: geometry cleanup, meshing & setup',
 
