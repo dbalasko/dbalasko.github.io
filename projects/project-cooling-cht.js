@@ -12,7 +12,7 @@ const projectCoolingCht = {
     ]
   },
 
-  title: 'Cooling duct CHT optimization',
+  title: 'Cooling duct CHT optimization Work in Progress',
   meta: ['STAR-CCM+', 'CHT'],
   role: 'Role: setup & optimization',
 
