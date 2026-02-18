@@ -13,7 +13,7 @@ const projectCylinderLes = {
     ]
   },
 
-  title: 'LES of cylinder wake at Re = 10<sup>5</sup>',
+  title: 'LES of cylinder wake at Re = 10<sup>5</sup> Coming Soon',
   meta: ['OpenFOAM', 'LES (WALE)'],
   role: 'Role: solver setup & validation',
 
