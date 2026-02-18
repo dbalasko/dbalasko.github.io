@@ -12,7 +12,7 @@ const projectIntakeManifold = {
     ]
   },
 
-  title: 'Intake manifold pressure loss analysis',
+  title: 'Intake manifold pressure loss analysis Work in Progress',
   meta: ['STAR-CCM+', 'Steady RANS'],
   role: 'Role: parametric design & CFD',
 
