@@ -7,7 +7,8 @@ const projectFerrariMacarenaWing = {
   media: {
     type: 'gallery',
     images: [
-      { src: 'projects/figs/Ferrari_Final_video.mp4', alt: 'Ferrari Macarena Wing: 180° rotation animation showing aerodynamic loading throughout rotation arc' }
+      { src: 'projects/figs/Ferrari_Final_video.mp4', alt: 'Ferrari Macarena Wing: 180° rotation animation showing aerodynamic loading throughout rotation arc'},
+      {  src: 'projects/figs/Ferrari_hysteresis_plot.jpg', alt: 'Ferrari Macarena Wing: Hysteresis plot showing aerodynamic hysteresis throughout rotation arc'}
     ]
   },
 
