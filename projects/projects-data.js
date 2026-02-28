@@ -17,7 +17,8 @@ const allProjects = [
   projectLavalNozzle,
   projectSupersonicJet,
   projectRayleighBenard,
-  projectRichtmyerMeshkov
+  projectRichtmyerMeshkov,
+  projectFerrariMacarenaWing
 ];
 
 // Export for use in renderer
