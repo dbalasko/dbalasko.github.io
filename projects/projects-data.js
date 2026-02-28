@@ -2,6 +2,8 @@
 // Each project is defined in its own file for maintainability
 
 const allProjects = [
+  projectFerrariMacarenaWing,
+  projectF1DrsAlpine,
   projectFsFrontWing,
   projectCorneringFs,
   projectCylinderLes,
@@ -13,12 +15,10 @@ const allProjects = [
   projectCavityFlow,
   projectSupersonicRamp,
   projectAdjointOptimisation,
-  projectF1DrsAlpine,
   projectLavalNozzle,
   projectSupersonicJet,
   projectRayleighBenard,
-  projectRichtmyerMeshkov,
-  projectFerrariMacarenaWing
+  projectRichtmyerMeshkov
 ];
 
 // Export for use in renderer
