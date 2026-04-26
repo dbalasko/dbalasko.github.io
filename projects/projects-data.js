@@ -4,12 +4,8 @@
 const allProjects = [
   projectFerrariMacarenaWing,
   projectF1DrsAlpine,
-  projectFsFrontWing,
   projectCorneringFs,
-  projectCylinderLes,
-  projectIntakeManifold,
   project2dSolver,
-  projectCoolingCht,
   projectParaviewAutomation,
   projectLbmInteractive,
   projectCavityFlow,
@@ -18,7 +14,11 @@ const allProjects = [
   projectLavalNozzle,
   projectSupersonicJet,
   projectRayleighBenard,
-  projectRichtmyerMeshkov
+  projectRichtmyerMeshkov,
+  projectFsFrontWing,
+  projectCylinderLes,
+  projectIntakeManifold,
+  projectCoolingCht
 ];
 
 // Export for use in renderer
