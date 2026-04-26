@@ -7,8 +7,7 @@ const projectParaviewAutomation = {
   media: {
     type: 'gallery',
     images: [
-      { src: 'paraview-automation-1.jpg', alt: 'ParaView automation 1' },
-      { src: 'paraview-automation-2.jpg', alt: 'ParaView automation 2' }
+      { src: 'projects/figs/paraview-logo.webp', alt: 'ParaView logo' }
     ]
   },
 
