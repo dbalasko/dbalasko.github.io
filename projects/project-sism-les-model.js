@@ -7,7 +7,7 @@ const projectSismLesModel = {
   media: {
     type: 'gallery',
     images: [
-      { src: 'projects/figs/openfoam-logo.png', alt: 'OpenFOAM logo' }
+      { src: 'projects/figs/openfoam-logo.svg', alt: 'OpenFOAM logo' }
     ]
   },
 
