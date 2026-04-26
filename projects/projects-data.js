@@ -2,6 +2,7 @@
 // Each project is defined in its own file for maintainability
 
 const allProjects = [
+  projectSismLesModel,
   projectFerrariMacarenaWing,
   projectF1DrsAlpine,
   projectCorneringFs,
