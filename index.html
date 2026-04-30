@@ -373,18 +373,8 @@
 
           <a class="feature-card c2" href="https://www.linkedin.com/posts/dominik-balasko_formula1-aerodynamics-cfd-activity-7432696163696443392-KOuh" target="_blank" rel="noopener" data-reveal>
             <div class="bg"></div>
-            <svg class="viz" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
-              <g stroke="rgba(255,180,120,0.5)" fill="none" stroke-width="1">
-                <circle cx="300" cy="380" r="80"/>
-                <circle cx="300" cy="380" r="140"/>
-                <circle cx="300" cy="380" r="200"/>
-                <circle cx="300" cy="380" r="260"/>
-              </g>
-              <g stroke="rgba(255,120,80,0.6)" stroke-width="1" fill="none">
-                <path d="M60 380 Q 300 80 540 380"/>
-                <path d="M60 380 Q 300 680 540 380"/>
-              </g>
-            </svg>
+            <video class="viz-video" autoplay muted loop playsinline src="projects/figs/Ferrari_Final_video.mp4"></video>
+            <div class="viz-overlay"></div>
             <div class="content top">
               <span class="tag">Analytical · F1</span>
               <h3>Ferrari's <em>"Macarena Wing"</em> — 180° rotating rear wing</h3>
@@ -400,17 +390,8 @@
 
           <a class="feature-card c3" href="https://www.linkedin.com/posts/dominik-balasko_f1-formula1-aerodynamics-activity-7426890258660667392-nkJk" target="_blank" rel="noopener" data-reveal>
             <div class="bg"></div>
-            <svg class="viz" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
-              <g stroke="rgba(150,240,200,0.45)" fill="none" stroke-width="1">
-                <path d="M60 380 C 200 380, 280 360, 340 320 C 400 280, 460 270, 540 280" stroke-width="1.4"/>
-                <path d="M60 410 C 200 410, 280 400, 340 380 C 400 360, 460 360, 540 370"/>
-                <path d="M60 350 C 200 350, 280 340, 340 310 C 400 280, 460 280, 540 290" opacity="0.6"/>
-              </g>
-              <g stroke="rgba(120,240,180,0.7)" stroke-width="1.2" fill="none">
-                <rect x="180" y="220" width="240" height="14" rx="2"/>
-                <rect x="200" y="240" width="200" height="10" rx="2"/>
-              </g>
-            </svg>
+            <video class="viz-video" autoplay muted loop playsinline src="projects/figs/Alpine_video.mp4"></video>
+            <div class="viz-overlay"></div>
             <div class="content top">
               <span class="tag">LES · Transient</span>
               <h3>Alpine F1 DRS philosophy <em>— hysteresis &amp; transient stability</em></h3>
@@ -665,7 +646,7 @@
             </div>
           </div>
 
-          <div class="project-item" data-cat="code">
+          <div class="project-item" id="project-item-cavity" data-cat="code">
             <button class="project-row" type="button">
               <span class="pn">09</span>
               <span class="ptitle">Lid-driven <em>cavity flow</em> simulator — interactive benchmark</span>
@@ -673,13 +654,43 @@
               <span class="pdate">2024</span>
               <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
             </button>
-            <div class="project-detail">
-              <div class="project-detail-img placeholder">Cavity benchmark</div>
+            <div class="project-detail project-detail--cavity">
+              <div class="project-detail-img" style="padding:0; background:#05080f;">
+                <canvas id="cavity-canvas" style="display:block; width:100%; height:100%; image-rendering:pixelated;"></canvas>
+              </div>
               <div class="project-detail-body">
-                <div class="role">CFD validation case · D2Q9 LBM</div>
-                <p>Classic CFD benchmark — square cavity with a moving top wall driving recirculation inside. D2Q9 LBM with BGK collision, push streaming, moving-lid BC with velocity correction.</p>
-                <p>Adjustable Re reveals the flow physics: a single primary vortex at low Re, secondary corner vortices appearing as Re grows. Real-time velocity, vorticity and pressure fields.</p>
-                <div class="project-detail-tags"><span>LBM</span><span>Benchmark</span><span>Interactive</span></div>
+                <div class="role">CFD validation case · D2Q9 LBM · BGK</div>
+                <div class="lbm-ctrl-grid">
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Lid velocity · <span id="cavity-vel-val" class="lbm-val">0.10</span></span>
+                    <input type="range" id="cavity-vel" class="lbm-range" min="0.02" max="0.20" step="0.01" value="0.10">
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Viscosity · <span id="cavity-visc-val" class="lbm-val">0.020</span></span>
+                    <input type="range" id="cavity-visc" class="lbm-range" min="0.005" max="0.05" step="0.005" value="0.020">
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Re ≈ <span id="cavity-re-val" class="lbm-val">750</span></span>
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Display</span>
+                    <select id="cavity-display" class="lbm-select">
+                      <option value="velocity">Velocity magnitude</option>
+                      <option value="vorticity">Vorticity</option>
+                      <option value="pressure">Pressure / density</option>
+                    </select>
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <label class="lbm-label" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                      <input type="checkbox" id="cavity-streamlines"> Streamlines
+                    </label>
+                  </div>
+                </div>
+                <div class="project-detail-tags" style="margin-top:12px;"><span>LBM</span><span>D2Q9</span><span>BGK</span><span>Benchmark</span></div>
+                <div class="project-detail-actions">
+                  <button id="cavity-start-btn" type="button" class="lbm-action-btn">Start</button>
+                  <button id="cavity-reset-btn" type="button" class="lbm-action-btn">Reset</button>
+                </div>
               </div>
             </div>
           </div>
@@ -699,6 +710,9 @@
                 <p>Compressible RANS over a double ramp (α = 8°, β = 22°) at M = 3.8 — oblique shock formation, shock-shock interaction, shock–boundary-layer coupling. Comparison of inviscid Euler, k-ε and BSL EARSM.</p>
                 <p>Shock-aligned structured mesh with biexponential node distribution sharply resolved gradients and reduced numerical diffusion versus a universal grid; BSL EARSM with full BL resolution gave the cleanest shock angles.</p>
                 <div class="project-detail-tags"><span>Supersonic</span><span>Shock waves</span><span>Structured mesh</span><span>BSL EARSM</span></div>
+                <div class="project-detail-actions">
+                  <a href="projects/ACFD_merged_final_reducted.pdf" target="_blank" rel="noopener">Report →</a>
+                </div>
               </div>
             </div>
           </div>
@@ -843,13 +857,13 @@
             <div class="venue">Project report · TU Munich</div>
             <h4>Adjoint shape optimisation of <em>ground vehicles with open-source tools</em></h4>
             <p>Comparison of DAFoam (discrete) and adjointShapeOptimisation (continuous) frameworks on Ahmed body and DrivAer fastback. Up to 15.3% drag reduction on DrivAer using FFD parameterisation with B-spline morphing.</p>
-            <div class="meta"><span>2024</span><span>·</span><a href="https://github.com/dbalasko/DrivAer_adjoint" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">Report &amp; code</a></div>
+            <div class="meta"><span>2024</span><span>·</span><a href="https://github.com/dbalasko/DrivAer_adjoint" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">Report &amp; code</a><span>·</span><a href="projects/ACFD_merged_final_reducted.pdf" target="_blank" rel="noopener" class="pub-pdf-link">PDF <svg class="pub-pdf-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6l3 3v9H4V2z"/><path d="M10 2v3h3"/><path d="M6 9h4M6 11.5h2.5"/></svg></a></div>
           </article>
           <article class="pub" data-reveal>
             <div class="venue">Project report · TU Munich</div>
             <h4>Supersonic double-ramp flow at <em>Mach 3.8 — meshing &amp; turbulence model study</em></h4>
             <p>Compressible RANS comparison of inviscid Euler, k-ε and BSL EARSM on shock-aligned structured grids. Investigation of oblique shock interaction and shock–boundary layer coupling.</p>
-            <div class="meta"><span>2024</span><span>·</span><span>ANSYS CFX report</span></div>
+            <div class="meta"><span>2024</span><span>·</span><span>ANSYS CFX report</span><span>·</span><a href="projects/Simulation_of_Thermofluids_with_Open_Source_Tools___Final_Project_Report.pdf" target="_blank" rel="noopener" class="pub-pdf-link">PDF <svg class="pub-pdf-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 2h6l3 3v9H4V2z"/><path d="M10 2v3h3"/><path d="M6 9h4M6 11.5h2.5"/></svg></a></div>
           </article>
           <article class="pub" data-reveal>
             <div class="venue">Engineering write-ups · LinkedIn</div>
@@ -899,7 +913,16 @@
       <button class="pm-close" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
-      <div class="pm-img" id="pm-img"></div>
+      <div class="pm-img" id="pm-img">
+        <div class="pm-img-media" id="pm-img-media"></div>
+        <button class="pm-gallery-nav pm-gallery-prev" id="pm-gallery-prev" aria-label="Previous" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="pm-gallery-nav pm-gallery-next" id="pm-gallery-next" aria-label="Next" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="pm-gallery-dots" id="pm-gallery-dots"></div>
+      </div>
       <div class="pm-body">
         <div class="pm-role" id="pm-role"></div>
         <h2 class="pm-title" id="pm-title"></h2>
@@ -959,6 +982,38 @@
     .project-detail--lbm .project-detail-tags { width: 100%; margin-top: 0; }
     .project-detail--lbm .project-detail-actions { width: 100%; }
 
+    /* Cavity project detail — same stacked layout as LBM */
+    .project-detail--cavity {
+      grid-template-columns: 1fr !important;
+    }
+    #project-item-cavity.open .project-detail--cavity {
+      max-height: 680px;
+    }
+    .project-detail--cavity .project-detail-img {
+      width: min(420px, 100%);
+      aspect-ratio: 1;
+      height: auto;
+      margin: 0 auto;
+    }
+    .project-detail--cavity .lbm-ctrl-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+    }
+    .project-detail--cavity .lbm-ctrl-row {
+      flex: 1 1 140px;
+    }
+    .project-detail--cavity .project-detail-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      align-items: flex-start;
+    }
+    .project-detail--cavity .role { width: 100%; }
+    .project-detail--cavity .lbm-ctrl-grid { width: 100%; }
+    .project-detail--cavity .project-detail-tags { width: 100%; margin-top: 0; }
+    .project-detail--cavity .project-detail-actions { width: 100%; }
+
     /* ── Project modal ───────────────────────────────────────── */
     .pm {
       position: fixed; inset: 0; z-index: 500;
@@ -974,10 +1029,10 @@
     }
     .pm-panel {
       position: relative; z-index: 1;
-      width: 100%; max-width: 920px; max-height: 88vh;
+      width: 100%; max-width: 880px; max-height: 90vh;
       background: var(--bg); border: 1px solid var(--line);
       border-radius: 28px; overflow: hidden;
-      display: grid; grid-template-columns: 340px 1fr;
+      display: flex; flex-direction: column;
       animation: pm-in 0.28s cubic-bezier(.2,.8,.2,1);
     }
     @keyframes pm-in {
@@ -989,61 +1044,93 @@
       width: 34px; height: 34px; border-radius: 50%;
       background: var(--surface-2); border: 1px solid var(--line);
       color: var(--fg); cursor: pointer; display: grid; place-items: center;
-      z-index: 3; transition: background 0.2s;
+      z-index: 4; transition: background 0.2s;
     }
     .pm-close:hover { background: var(--fg); color: var(--bg); }
     .pm-close svg { width: 14px; height: 14px; stroke: currentColor; }
+    /* Gallery image pane */
     .pm-img {
-      position: relative; overflow: hidden;
-      background: var(--surface-2); border-right: 1px solid var(--line);
+      position: relative; flex-shrink: 0;
+      background: #05080f; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 80px;
     }
-    .pm-img img, .pm-img video { width:100%; height:100%; object-fit:cover; display:block; }
-    .pm-img.contain img { object-fit:contain; padding:28px; }
-    .pm-img.placeholder {
-      display:flex; align-items:center; justify-content:center;
-      font-family:var(--mono); font-size:10px; letter-spacing:0.18em;
-      text-transform:uppercase; color:var(--fg-mute);
+    .pm-img-media {
+      display: flex; align-items: center; justify-content: center; width: 100%;
     }
+    .pm-img-media img, .pm-img-media video {
+      display: block; max-width: 100%; max-height: 54vh; width: auto; height: auto;
+    }
+    .pm-img-media.contain img { max-height: 200px; padding: 36px; }
+    .pm-img-media.placeholder {
+      min-height: 120px; width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--fg-mute);
+    }
+    /* Gallery navigation */
+    .pm-gallery-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.14);
+      color: #fff; cursor: pointer; display: grid; place-items: center; z-index: 2;
+      opacity: 0; transition: opacity 0.18s, background 0.18s;
+    }
+    .pm-img:hover .pm-gallery-nav { opacity: 1; }
+    .pm-gallery-nav:hover { background: rgba(0,0,0,0.82); }
+    .pm-gallery-nav[hidden] { display: none; }
+    .pm-gallery-nav svg { width: 16px; height: 16px; }
+    .pm-gallery-prev { left: 12px; }
+    .pm-gallery-next { right: 12px; }
+    .pm-gallery-dots {
+      position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 2;
+    }
+    .pm-gallery-dot {
+      width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0;
+      background: rgba(255,255,255,0.32); cursor: pointer; transition: background 0.18s;
+    }
+    .pm-gallery-dot.on { background: rgba(255,255,255,0.9); }
+    /* Text body */
     .pm-body {
-      padding: 40px 40px 36px 36px;
-      overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+      padding: 28px 36px 32px;
+      overflow-y: auto; flex: 1;
+      display: flex; flex-direction: column; gap: 14px;
     }
     .pm-role {
-      font-family:var(--mono); font-size:10px; letter-spacing:0.16em;
-      text-transform:uppercase; color:var(--fg-mute);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--fg-mute);
     }
     .pm-title {
-      font-family:var(--serif); font-weight:500;
-      font-size:clamp(22px,2.4vw,32px); line-height:1.1;
-      letter-spacing:-0.025em; margin:0; color:var(--fg);
+      font-family: var(--serif); font-weight: 500;
+      font-size: clamp(20px, 2.2vw, 28px); line-height: 1.1;
+      letter-spacing: -0.025em; margin: 0; color: var(--fg);
     }
-    .pm-title em { font-style:normal; color:var(--fg-dim); }
-    .pm-text p { font-size:14px; line-height:1.68; color:var(--fg-dim); margin:0 0 10px; }
-    .pm-text ul { padding-left:18px; color:var(--fg-dim); font-size:14px; line-height:1.68; }
-    .pm-text li { margin-bottom:5px; }
-    .pm-tags { display:flex; flex-wrap:wrap; gap:6px; }
+    .pm-title em { font-style: normal; color: var(--fg-dim); }
+    .pm-text p { font-size: 14px; line-height: 1.68; color: var(--fg-dim); margin: 0 0 10px; }
+    .pm-text ul { padding-left: 18px; color: var(--fg-dim); font-size: 14px; line-height: 1.68; }
+    .pm-text li { margin-bottom: 5px; }
+    .pm-text pre { border-radius: 6px; overflow-x: auto; margin: 8px 0 12px; }
+    .pm-text code { font-family: var(--mono); font-size: 0.87em; }
+    .pm-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .pm-tags span {
-      font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
-      padding:4px 9px; border:1px solid var(--line); border-radius:999px; color:var(--fg-dim);
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+      padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--fg-dim);
     }
-    .pm-actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:4px; }
+    .pm-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 4px; }
     .pm-actions a {
-      font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
-      color:var(--fg); text-decoration:none; border-bottom:1px solid var(--fg-dim);
-      padding-bottom:2px; transition:border-color 0.2s;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+      color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--fg-dim);
+      padding-bottom: 2px; transition: border-color 0.2s;
     }
-    .pm-actions a:hover { border-color:var(--fg); }
+    .pm-actions a:hover { border-color: var(--fg); }
     .pm-open-btn {
-      font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
-      color:var(--fg); background:none; border:none;
-      border-bottom:1px solid var(--fg-dim); padding-bottom:2px;
-      cursor:pointer; transition:border-color 0.2s;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+      color: var(--fg); background: none; border: none;
+      border-bottom: 1px solid var(--fg-dim); padding-bottom: 2px;
+      cursor: pointer; transition: border-color 0.2s;
     }
-    .pm-open-btn:hover { border-color:var(--fg); }
-    @media (max-width:720px) {
-      .pm-panel { grid-template-columns:1fr; grid-template-rows:220px 1fr; }
-      .pm-img { border-right:none; border-bottom:1px solid var(--line); }
-    }
+    .pm-open-btn:hover { border-color: var(--fg); }
   </style>
 
   <script type="importmap">
@@ -1105,11 +1192,403 @@
     })();
   </script>
   <script>
-    // Project modal
+    // Gallery images keyed by pn number. Each entry: {src, alt, contain?, isVideo?}
+    const pmGalleryMap = {
+      '01': [
+        { src: 'projects/figs/Ferrari_Final_video.mp4', alt: 'Ferrari Macarena Wing 180° rotation', isVideo: true },
+        { src: 'projects/figs/Ferrari_hysteresis_plot.jpg', alt: 'Hysteresis plot across rotation arc' }
+      ],
+      '02': [
+        { src: 'projects/figs/Alpine_video.mp4', alt: 'Alpine DRS velocity field', isVideo: true },
+        { src: 'projects/figs/Alpine_plot.png', alt: 'Hysteresis plot: conventional vs Alpine DRS' }
+      ],
+      '03': [
+        { src: 'projects/figs/openfoam-logo.svg', alt: 'OpenFOAM', contain: true }
+      ],
+      '04': [
+        { src: 'projects/figs/openfoam-logo.svg', alt: 'OpenFOAM', contain: true }
+      ],
+      '05': [
+        { src: 'projects/figs/fe-25-1243_f007.png', alt: 'Pressure distribution under yaw' },
+        { src: 'projects/figs/fe-25-1243_f005.png', alt: 'Cornering aerodynamics overview' },
+        { src: 'projects/figs/fe-25-1243_f006.png', alt: 'Flow field comparison' },
+        { src: 'projects/figs/fe-25-1243_f010.png', alt: 'Wake asymmetry' },
+        { src: 'projects/figs/fe-25-1243_f011.png', alt: 'Downforce distribution' },
+        { src: 'projects/figs/fe-25-1243_f016.png', alt: 'Aerodynamic load imbalance' }
+      ],
+      '07': [
+        { src: 'projects/figs/paraview-logo.webp', alt: 'ParaView', contain: true }
+      ],
+      '10': [
+        { src: 'projects/figs/supersonic-ramp-pressure.jpg', alt: 'Total pressure — shock structure' },
+        { src: 'projects/figs/supersonic-ramp-mesh-refined.jpg', alt: 'Shock-aligned structured mesh' },
+        { src: 'projects/figs/supersonic-ramp-density.jpg', alt: 'Density field comparison' },
+        { src: 'projects/figs/supersonic-ramp-convergence-0.jpg', alt: 'Residual convergence history' },
+        { src: 'projects/figs/supersonic-ramp-convergence-1.jpg', alt: 'Monitor point convergence' }
+      ],
+      '11': [
+        { src: 'projects/figs/adjoint_DrivAer_adjoint_sensitivity.png', alt: 'DrivAer shape sensitivity map' },
+        { src: 'projects/figs/adjoint_Geometry.gif', alt: 'Geometry optimisation evolution' },
+        { src: 'projects/figs/adjoint_Wake.gif', alt: 'Wake structure evolution' },
+        { src: 'projects/figs/adjoint_ahmed_mesh.gif', alt: 'Ahmed body mesh deformation' },
+        { src: 'projects/figs/adjoint_Ahmed_body_Cp.png', alt: 'Ahmed body Cp distribution' },
+        { src: 'projects/figs/adjoint_Ahmed_Cp_3D.png', alt: '3D Cp visualisation' },
+        { src: 'projects/figs/adjoint_controlPoints.png', alt: 'FFD control points' },
+        { src: 'projects/figs/adjoint_DrivAer_adjoint_Cpt_isoSurface_opt.png', alt: 'DrivAer Cpt iso-surface (optimised)' }
+      ],
+      '12': [
+        { src: 'projects/figs/Laval_Ma.png', alt: 'Mach number contours' },
+        { src: 'projects/figs/Laval_P.png', alt: 'Pressure contours' },
+        { src: 'projects/figs/Laval_T_P.png', alt: 'Total pressure contours' },
+        { src: 'projects/figs/Laval_Entropy.png', alt: 'Entropy contours' }
+      ],
+      '13': [
+        { src: 'projects/figs/Jet_p_stat_0_4_bar_Ma.png', alt: 'Over-expanded jet — Mach' },
+        { src: 'projects/figs/Jet_p_stat_0_4_bar_p_stat.png', alt: 'Over-expanded jet — static pressure' },
+        { src: 'projects/figs/Jet_p_stat_0_4_bar_p_tot.png', alt: 'Over-expanded jet — total pressure' },
+        { src: 'projects/figs/Jet_p_stat_1_4_bar_Ma.png', alt: 'Under-expanded jet — Mach' },
+        { src: 'projects/figs/Jet_p_stat_1_4_bar_p_stat.png', alt: 'Under-expanded jet — static pressure' },
+        { src: 'projects/figs/Jet_p_stat_1_4_bar_p_tot.png', alt: 'Under-expanded jet — total pressure' }
+      ],
+      '14': [
+        { src: 'projects/figs/Rayleigh Bernard_3D_Ra_800000_streamline.png', alt: '3D Ra = 800,000 streamlines' },
+        { src: 'projects/figs/Rayleigh Bernard_Ra_500_001.png', alt: 'Ra = 500 — conduction dominated' },
+        { src: 'projects/figs/Rayleigh Bernard_Ra_5000_001.png', alt: 'Ra = 5,000 — convection cells forming' },
+        { src: 'projects/figs/Rayleigh Bernard_Ra_50000_001.png', alt: 'Ra = 50,000 — strong convection' },
+        { src: 'projects/figs/Rayleigh Bernard_2D_combined_plot.png', alt: 'Nu and velocity vs Ra' },
+        { src: 'projects/figs/Rayleigh Bernard_3D_Ra_40000_streamline.png', alt: '3D Ra = 40,000 — two counter-rotating cells' },
+        { src: 'projects/figs/Rayleigh Bernard_3D_Ra_80000_streamline.png', alt: '3D Ra = 80,000 streamlines' }
+      ],
+      '15': [
+        { src: 'projects/figs/Richtmeyer_Meshkov_SF6_mass_fraction.gif', alt: 'SF₆ mass fraction — mushroom roll-up' },
+        { src: 'projects/figs/Richtmeyer_Meshkov_Backward_Euler.gif', alt: '1st-order Backward Euler — diffusive smearing' },
+        { src: 'projects/figs/Richtmeyer_Meshkov_advection_scheme_comparison_t_0015.png', alt: 'Advection scheme comparison at t = 0.015' }
+      ]
+    };
+  </script>
+  <script>
+    // Long descriptions for each project — keyed by pn number
+    const pmDetailsMap = {
+      '01': `<p><strong>Background:</strong> Ferrari introduced a rotating rear wing concept rumoured to deliver 8–10 km/h of additional top speed. Unlike conventional DRS, the entire wing rotates 180°, presenting novel aerodynamic and structural challenges throughout the rotation arc.</p>
+        <p><strong>Aerodynamic challenges:</strong></p>
+        <ul>
+          <li><strong>Mid-rotation drag spike:</strong> At ~90° rotation the wing presents maximum frontal area, creating a significant transient drag peak</li>
+          <li><strong>Flow separation:</strong> Mid-rotation geometry generates strong separation on both surfaces simultaneously</li>
+          <li><strong>Vortex shedding:</strong> Separated flow produces intense oscillatory loads at frequencies that shift as the car decelerates during braking</li>
+          <li><strong>Resonance risk:</strong> The sweeping excitation spectrum may cross structural natural frequencies across braking events</li>
+        </ul>
+        <p><strong>Structural tradeoffs:</strong></p>
+        <ul>
+          <li>Maximum structural loads occur at ~90° — precisely where aerodynamic loading is least predictable</li>
+          <li>Withstanding transient drag spikes requires a stiffer, heavier structure</li>
+          <li>Additional mass at the rear wing raises the centre of gravity, increasing rear lateral load transfer</li>
+          <li>Higher lateral load transfer reduces rear grip margin, particularly under combined braking and cornering</li>
+        </ul>
+        <p><strong>Handling implications:</strong></p>
+        <ul>
+          <li>Raised rear CoG compromises cornering balance on high-speed, high-downforce circuits</li>
+          <li>Trade-off is most acceptable at low-downforce circuits where cornering sensitivity is reduced</li>
+          <li><strong>Favourable:</strong> Monza, Baku — long straights, minimal high-speed corners</li>
+          <li><strong>Unfavourable:</strong> Silverstone, Spa, Suzuka — high-speed corner dependency makes rear CoG sensitivity costly</li>
+        </ul>
+        <p>The Macarena wing is an elegant regulation exploit, but a circuit-specific weapon. The structural mass penalty and oscillatory load environment during rotation create real handling compromises that limit universal deployment.</p>`,
+
+      '02': `<p><strong>Background:</strong> Alpine's DRS uses a front-hinged flap rotating downward, unlike the conventional rear-hinged design. This study investigates the aerodynamic tradeoffs using transient LES.</p>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>Transient LES with WMLES (WALE subgrid model)</li>
+          <li>2-element rear wing: NACA 4415 mainplane + S1223 flap</li>
+          <li>Identical mesh and motion law for both concepts</li>
+          <li>Overset mesh to capture DRS opening and closure</li>
+        </ul>
+        <p><strong>Two DRS concepts:</strong></p>
+        <ul>
+          <li><strong>Conventional DRS:</strong> rear-hinged flap rotates upward, substantially reduces mainplane loading</li>
+          <li><strong>Alpine-style DRS:</strong> front-hinged flap rotates downward, preserves aerodynamic coupling to mainplane</li>
+        </ul>
+        <p><strong>Key findings:</strong></p>
+        <ul>
+          <li>Overall drag reduction nearly identical between concepts</li>
+          <li>Alpine design shows opposing hysteresis: higher lift during closure vs opening</li>
+          <li>Conventional DRS shows lower lift during closure</li>
+          <li>Front-hinge geometry promotes faster pressure recovery and cleaner force rebuild when closing</li>
+        </ul>
+        <p>Alpine's design philosophy favors predictable transient behavior and stability during late DRS closure — critical for driver confidence in high-speed corners.</p>`,
+
+      '03': `<p>The standard Smagorinsky model responds to the total resolved strain rate, making it over-dissipative wherever mean shear is present — near walls, in boundary layers, and in transitional regions. The <strong>Shear-Improved Smagorinsky Model (SISM)</strong> (Lévêque, Toschi, Shao &amp; Bertoglio, <em>J. Fluid Mech.</em> 570, 2007) addresses this by subtracting the mean strain-rate magnitude from the instantaneous one before computing the eddy viscosity:</p>
+        <pre style="background:#0a0e1a;padding:0.75rem 1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;">νT = (Cs Δ)² ( |S̄| − |⟨S̄⟩| )</pre>
+        <p>The mean strain rate is tracked via an exponential running average updated every time step, preserving the averaging history across restarts via the <code>meanS</code> field.</p>
+        <p>Key properties:</p>
+        <ul>
+          <li>Naturally <strong>damps SGS viscosity near walls</strong> where mean shear dominates — no van Driest function needed.</li>
+          <li>Recovers standard Smagorinsky behaviour in isotropic turbulence where <code>|S̄| &gt;&gt; |⟨S̄⟩|</code>.</li>
+          <li>Correctly captures laminar-to-turbulent transition without ad-hoc fixes.</li>
+          <li>Matches DNS data for channel flow at Re<sub>τ</sub> = 395 and 590 at a fraction of the cost of the dynamic model.</li>
+          <li>Tunable <code>averagingCoeff</code> (α) to set the effective averaging time scale: <code>T_avg ≈ dt / α</code>.</li>
+        </ul>
+        <p>Compiled with <code>wmake libso</code> and loaded at runtime via <code>libs ("libSISM.so");</code> in <code>system/controlDict</code>. Drop-in replacement for any incompressible LES solver (e.g. <code>pisoFoam</code>).</p>`,
+
+      '04': `<p>Standard wall functions in OpenFOAM are built on the two-layer (viscous sublayer + log law) approximation, which is discontinuous at the buffer layer and requires careful placement of the first cell (30 &lt; y⁺ &lt; 300). This implementation replaces that with <strong>Reichardt's (1951)</strong> single continuous profile:</p>
+        <pre style="background:#0a0e1a;padding:0.75rem 1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;">u⁺ = (1/κ) ln(1 + κ y⁺) + C [1 − exp(−y⁺/11) − (y⁺/11) exp(−y⁺/3)]</pre>
+        <p>The friction velocity u<sub>τ</sub> is recovered via <strong>Newton–Raphson iteration</strong> of the implicit profile equation, then the turbulent viscosity is back-calculated as:</p>
+        <pre style="background:#0a0e1a;padding:0.75rem 1rem;border-radius:6px;overflow-x:auto;font-size:0.82rem;">νt = uτ² / |∂U/∂n| − ν</pre>
+        <p>Key properties:</p>
+        <ul>
+          <li>Smooth, single-formula profile valid from y⁺ = 0 to the log-law region — no discontinuity at the buffer layer.</li>
+          <li>Drop-in replacement for the built-in <code>nutWallFunction</code>; compatible with any RANS or hybrid LES/RANS solver.</li>
+          <li>Single tuning parameter: <code>C</code> (Reichardt's constant, default 7.8).</li>
+          <li>Inherits <code>yPlus</code> reporting and all standard OpenFOAM wall-function infrastructure.</li>
+        </ul>
+        <p>Compiled with <code>wmake libso</code> and activated by setting <code>type myReichardtWallFunction;</code> on any wall patch in <code>0/nut</code>.</p>`,
+
+      '05': `<p>This research investigated how cornering affects the aerodynamic performance of Formula Student vehicles — a critical but often overlooked aspect of race car aerodynamics. Most studies focus on straight-line performance, but significant lap time is spent in corners where aerodynamic behavior differs substantially.</p>
+        <p>Key research contributions:</p>
+        <ul>
+          <li>CFD analysis of full-vehicle aerodynamics under cornering conditions.</li>
+          <li>Investigation of yaw angle and roll effects on downforce distribution.</li>
+          <li>Quantification of left-right aerodynamic load imbalance during cornering.</li>
+          <li>Flow field analysis showing wake asymmetry and ground effect variations.</li>
+          <li>Validation against reference data and experimental measurements.</li>
+        </ul>
+        <p>The study provides insights into how cornering maneuvers alter pressure distributions, flow separation patterns, and overall aerodynamic balance — critical information for optimizing vehicle setup and design for circuit performance rather than just straight-line speed.</p>`,
+
+      '06': `<p>The solver was built to better understand how discretization choices impact stability and accuracy. It includes modular components for time integration, linear solvers, and boundary conditions.</p>
+        <p>Implemented features:</p>
+        <ul>
+          <li>Staggered grid arrangement for pressure–velocity coupling.</li>
+          <li>Second-order upwind and central differencing schemes.</li>
+          <li>Pressure correction loop for incompressibility.</li>
+        </ul>
+        <p>Validation was carried out on lid-driven cavity and fully developed channel flow, comparing velocity profiles and drag against literature and analytical solutions.</p>`,
+
+      '07': `<p>These tools were created to standardize how CFD results are processed across projects. The scripts connect to ParaView, apply predefined filters, and export visualizations and data.</p>
+        <p>Capabilities:</p>
+        <ul>
+          <li>Batch processing of time-series or design variants.</li>
+          <li>Automatic creation of plots for forces, coefficients and probes.</li>
+          <li>Scripted layout exports for consistent figure styling.</li>
+        </ul>
+        <p>This significantly reduced the time from "results finished" to "ready-to-share report" and improved traceability of how each figure was generated.</p>`,
+
+      '08': `<p>This is a fully functional Lattice Boltzmann Method solver running entirely in the browser. The D2Q9 lattice scheme solves the incompressible Navier–Stokes equations using kinetic theory and local collision operators.</p>
+        <p>Key features:</p>
+        <ul>
+          <li>D2Q9 lattice with BGK collision operator.</li>
+          <li>Bounce-back boundary conditions for solid walls and objects.</li>
+          <li>Real-time visualization of velocity, vorticity, or pressure fields.</li>
+          <li>Multiple geometries: cylinder, airfoil (NACA 0012), square, flat plate, triangle.</li>
+          <li>Interactive parameter control: inlet velocity, kinematic viscosity.</li>
+          <li>Pure JavaScript implementation — no external CFD libraries.</li>
+        </ul>
+        <p>The solver updates at interactive frame rates, allowing you to explore how flow behaves around different shapes. Watch vortex shedding develop behind a cylinder or see boundary layer separation on an airfoil — all computed in real time.</p>`,
+
+      '09': `<p>The lid-driven cavity is one of the most widely used benchmark cases for testing CFD solvers. The problem is simple to define but exhibits rich flow physics: a square cavity filled with fluid, where the top wall moves at constant velocity while all other walls remain stationary.</p>
+        <p>Key features:</p>
+        <ul>
+          <li>D2Q9 Lattice Boltzmann Method with BGK collision operator.</li>
+          <li>Push streaming scheme for efficient computation.</li>
+          <li>Moving lid boundary condition at the top wall with velocity correction.</li>
+          <li>Bounce-back boundary conditions on stationary walls.</li>
+          <li>Adjustable lid velocity and viscosity to control Reynolds number.</li>
+          <li>Real-time visualization of velocity, vorticity, and pressure fields.</li>
+          <li>Formation of counter-rotating corner vortices at higher Re.</li>
+        </ul>
+        <p>At low Reynolds numbers (Re ≈ 100), a single primary vortex fills most of the cavity. As Re increases (Re ≈ 400–1000), secondary vortices appear in the bottom corners. This benchmark has been extensively studied and validated against high-resolution reference data.</p>`,
+
+      '10': `<p>This study investigated supersonic flow over a double ramp configuration (α = 8°, β = 22°) at Mach 3.8, featuring oblique shock formation, shock-shock interaction, and shock-boundary layer coupling. Three simulation approaches were compared: inviscid Euler, RANS k-ε, and RANS BSL EARSM.</p>
+        <p>Supersonic flow phenomena captured:</p>
+        <ul>
+          <li>Two distinct oblique shocks originating from each ramp kink.</li>
+          <li>Shock interaction region where the weaker first shock bends under influence of the stronger second shock.</li>
+          <li>Expansion fan downstream of the second shock affecting shock trajectory.</li>
+          <li>Total pressure losses across shocks: Δp<sub>01</sub> ≈ 6 kPa (weak), Δp<sub>02</sub> ≈ 40 kPa (strong).</li>
+          <li>Post-shock Mach numbers: M<sub>1</sub> = 3.26, M<sub>2</sub> = 2.31.</li>
+        </ul>
+        <p>Structured mesh approach:</p>
+        <ul>
+          <li>Hexahedral structured grid for lower numerical diffusion when aligned with flow.</li>
+          <li>Refined mesh with shock-aligned blocking — splits oriented at predicted shock angles.</li>
+          <li>Biexponential node distribution to concentrate cells at expected shock locations.</li>
+          <li>Prism layer refinement: 25 layers (k-ε, Y⁺ = 30–300) and 64 layers (BSL EARSM, Y⁺ &lt; 5).</li>
+        </ul>
+        <p>The refined mesh with shock-aligned cells showed significantly sharper gradient resolution. The BSL EARSM model with full boundary layer resolution provided the most accurate shock angles and handled flow anisotropy in the shock-boundary layer interaction region.</p>`,
+
+      '11': `<p><strong>Adjoint methods</strong> compute sensitivity df/dx at cost independent of the number of design variables.</p>
+        <p><strong>Two frameworks compared:</strong></p>
+        <ul>
+          <li><strong>DAFoam (discrete adjoint):</strong> higher accuracy, memory limited (~300k cells)</li>
+          <li><strong>adjointShapeOptimisation (continuous adjoint):</strong> more stable, scales to 1.5M cells</li>
+        </ul>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>Geometries: Ahmed body and DrivAer fastback</li>
+          <li>FFD parameterisation with B-spline morphing (8×6×8 control points)</li>
+          <li>Spalart-Allmaras + Spalding wall function, y⁺ ≈ 62</li>
+          <li>snappyHexMesh, 2 prism layers</li>
+        </ul>
+        <p><strong>Results:</strong></p>
+        <ul>
+          <li>Ahmed body: 1.88% drag reduction (rear ramp optimisation)</li>
+          <li>DrivAer (DAFoam): ~11% drag reduction (10 iterations)</li>
+          <li>DrivAer (continuous adjoint): ~15.3% drag reduction (20 iterations, finer mesh)</li>
+        </ul>
+        <p>Continuous adjoint proved more practical for complex geometries; mesh resolution directly affects the optimum; smooth wall functions critical for gradient accuracy.</p>`,
+
+      '12': `<p><strong>Background:</strong> Laval nozzles accelerate flow to supersonic speeds by exploiting area-Mach relations. Flow reaches M=1 at the throat, then expands supersonically in the diverging section.</p>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>2D converging-diverging nozzle (axisymmetric, half-domain)</li>
+          <li>Throat height y* = 15 mm, inlet/outlet h = 60 mm, radius r = 400 mm</li>
+          <li>Inviscid Euler (μ=0, λ=0), total energy model</li>
+          <li>Inlet: p₀ = 1 bar, T₀ = 293 K, γ = 1.4, R = 287 J/(kg·K)</li>
+          <li>Back pressures tested: 0.984, 0.884, 0.784, 0.184 bar</li>
+        </ul>
+        <p><strong>Key findings:</strong></p>
+        <ul>
+          <li>Choked mass flow: ṁ = 0.035417 kg/s (analytical) vs 0.035414 kg/s (CFX) — agreement to four decimal places</li>
+          <li>Mass flow remains constant across all back pressures once throat is choked</li>
+          <li>Lower back pressures create supersonic expansion in the diverging section</li>
+          <li>Maximal Mach numbers: 1.08 → 1.57 → 1.81 → 3.44 as back pressure decreases</li>
+          <li>Normal shock forms at outlet at p₂ = 0.184 bar; total pressure losses and entropy generation confirmed</li>
+        </ul>`,
+
+      '13': `<p><strong>Background:</strong> When nozzle exit pressure doesn't match ambient, the jet forms a series of oblique shocks and expansion fans to equilibrate — the characteristic "shock diamond" pattern.</p>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>2D supersonic jet, inlet Ma = 1.5 (p₀/p = 3.671)</li>
+          <li>Inviscid Euler, total energy model</li>
+          <li>Three operating conditions; coarse and fine mesh comparison</li>
+        </ul>
+        <p><strong>Operating conditions:</strong></p>
+        <ul>
+          <li><strong>Over-expanded (p_exit = 0.4 bar):</strong> exit pressure &lt; ambient → oblique shock train compresses flow back to ambient</li>
+          <li><strong>Under-expanded (p_exit = 1.4 bar):</strong> exit pressure &gt; ambient → Prandtl-Meyer expansion fan at nozzle lip, followed by oblique shock reflections</li>
+          <li><strong>Matched (p_exit = 1.0 bar):</strong> minimal shock structure</li>
+        </ul>
+        <p><strong>Key findings:</strong></p>
+        <ul>
+          <li>Total pressure losses concentrated across shock fronts (isentropic elsewhere)</li>
+          <li>Finer mesh resolves shock fronts more sharply, reduces numerical diffusion</li>
+          <li>Peak pressure differences up to 5% between coarse and fine mesh near shock boundary</li>
+        </ul>
+        <p>The oblique shock pattern is self-adjusting — the jet continuously tries to match ambient pressure through compression and expansion waves, creating the repeating diamond structure.</p>`,
+
+      '14': `<p><strong>Background:</strong> Rayleigh-Bénard convection occurs when a fluid is heated from below. At low Ra, heat transfer is purely conductive; above a critical Ra ≈ 1707, convection cells spontaneously form, dramatically enhancing heat transfer.</p>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>Two configurations: 2D periodic layer (20×5 mm) and 3D square cavity (10×10×20 mm)</li>
+          <li>Boussinesq approximation; laminar solver with thermal energy equation</li>
+          <li>Water properties: β = 2.57×10⁻⁴ K⁻¹, ν = 8.926×10⁻⁷ m²/s, λ = 0.607 W/(m·K)</li>
+        </ul>
+        <p><strong>Results across Ra sweep:</strong></p>
+        <ul>
+          <li>Ra = 500: Below critical → linear temperature profile, no convection cells</li>
+          <li>Ra = 5000: Convection cells form, Nusselt number validates empirical correlation Nu ≈ 1.56(Ra/Ra_c)^0.296</li>
+          <li>Ra = 40,000 (3D): Two counter-rotating cells, Nu_avg = 3.43</li>
+          <li>Ra = 80,000 (3D): Stronger circulation, Nu_avg = 5.94</li>
+          <li>Ra = 800,000 (3D): Multiple cells at boundaries, Nu_avg = 14.32</li>
+        </ul>
+        <p>Non-linear, degressive growth of Nu and velocity with Ra; ratio Nu_max/Nu_avg increases from 1.03 to 1.76, indicating progressively anisotropic flow.</p>`,
+
+      '15': `<p><strong>Background:</strong> The Richtmyer-Meshkov instability occurs when a shockwave hits the interface between two fluids of different densities. Misaligned pressure and density gradients generate baroclinic vorticity, causing the interface to roll up into a characteristic mushroom shape and dramatically enhancing mixing.</p>
+        <p><strong>Setup:</strong></p>
+        <ul>
+          <li>2D transient simulation with sinusoidal interface (λ = 59.3 mm, amplitude a₀ = 4 mm)</li>
+          <li>Two fluids: acetone-air mixture (γ = 1.276) and SF₆ (γ = 1.093, M = 146.05 g/mol)</li>
+          <li>Pre-shock: p = 0.956 bar; post-shock: p = 1.648 bar, density ratio ρ_SF₆/ρ_aa ≈ 4.4</li>
+        </ul>
+        <p><strong>Physical phenomena:</strong></p>
+        <ul>
+          <li><strong>Shock reflection:</strong> At t ≈ 0.7 ms one shock transmits into SF₆, one reflects back</li>
+          <li><strong>Vorticity generation:</strong> Baroclinic vorticity ω ∝ ∇ρ × ∇p at the misaligned interface</li>
+          <li><strong>Interface roll-up:</strong> Mushroom-shaped roll-up visible in SF₆ mass fraction at t = 1–5 ms</li>
+          <li><strong>Enhanced mixing:</strong> Roll-up dramatically increases interfacial area</li>
+        </ul>
+        <p><strong>Numerical scheme comparison:</strong></p>
+        <ul>
+          <li>Upwind vs High Resolution: peak pressure differences up to 5% at shock front</li>
+          <li>1st vs 2nd order Backward Euler: 1st order smears sharp gradients and damps fine-scale vortex structures</li>
+          <li>2nd order time + High Resolution advection required to resolve small-scale structures</li>
+        </ul>
+        <p>The R-M instability is driven by impulsive baroclinic vorticity — deposited during shock passage, then convects and diffuses. Critical in inertial confinement fusion, supernova explosions, and scramjet combustors.</p>`,
+
+      '16': `<p>This classic benchmark was used to verify both numerical settings and the chosen subgrid-scale model. The mesh was designed to have sufficient resolution in the shear layers and wake region, while remaining affordable for long time-series.</p>
+        <p>Highlights:</p>
+        <ul>
+          <li>WALE SGS model with second-order accurate schemes.</li>
+          <li>Time step based on CFL &lt; 0.5 in the shear layer region.</li>
+          <li>Monitoring of Cd, Cl and base pressure to ensure statistical convergence.</li>
+        </ul>
+        <p>The predicted Strouhal number and mean drag coefficient matched reference values within a few percent, giving confidence in the LES setup and filters for future transient projects.</p>`,
+    };
+  </script>
+  <script>
+    // Project modal — with gallery support
     (function () {
       const modal    = document.getElementById('project-modal');
       const backdrop = modal.querySelector('.pm-backdrop');
       const closeBtn = modal.querySelector('.pm-close');
+      const mediaWrap = document.getElementById('pm-img-media');
+      const prevBtn  = document.getElementById('pm-gallery-prev');
+      const nextBtn  = document.getElementById('pm-gallery-next');
+      const dotsEl   = document.getElementById('pm-gallery-dots');
+
+      let gallery = [];
+      let galIdx  = 0;
+
+      function renderMedia() {
+        mediaWrap.innerHTML = '';
+        mediaWrap.className = 'pm-img-media';
+        dotsEl.innerHTML = '';
+
+        if (!gallery.length) {
+          mediaWrap.classList.add('placeholder');
+          mediaWrap.textContent = '—';
+          prevBtn.hidden = true; nextBtn.hidden = true;
+          return;
+        }
+
+        const g = gallery[galIdx];
+
+        if (g.placeholder !== undefined) {
+          mediaWrap.classList.add('placeholder');
+          mediaWrap.textContent = g.placeholder || '—';
+        } else if (g.isVideo || /\.mp4$/i.test(g.src || '')) {
+          const vid = document.createElement('video');
+          vid.src = g.src; vid.autoplay = true; vid.muted = true;
+          vid.loop = true; vid.playsInline = true;
+          mediaWrap.appendChild(vid);
+        } else {
+          const img = document.createElement('img');
+          img.src = g.src; img.alt = g.alt || ''; img.loading = 'eager';
+          mediaWrap.appendChild(img);
+          if (g.contain) mediaWrap.classList.add('contain');
+        }
+
+        // Nav buttons
+        prevBtn.hidden = gallery.length <= 1;
+        nextBtn.hidden = gallery.length <= 1;
+
+        // Dots
+        if (gallery.length > 1) {
+          gallery.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'pm-gallery-dot' + (i === galIdx ? ' on' : '');
+            dot.setAttribute('aria-label', 'Image ' + (i + 1));
+            dot.addEventListener('click', () => { galIdx = i; renderMedia(); });
+            dotsEl.appendChild(dot);
+          });
+        }
+      }
+
+      prevBtn.addEventListener('click', () => {
+        galIdx = (galIdx - 1 + gallery.length) % gallery.length;
+        renderMedia();
+      });
+      nextBtn.addEventListener('click', () => {
+        galIdx = (galIdx + 1) % gallery.length;
+        renderMedia();
+      });
 
       // Inject "More →" into every project item
       document.querySelectorAll('.project-item').forEach((item) => {
@@ -1130,6 +1609,9 @@
       });
 
       function openModal(item) {
+        const pnEl  = item.querySelector('.pn');
+        const pnKey = pnEl ? pnEl.textContent.trim() : null;
+
         // Title
         const titleEl = item.querySelector('.ptitle');
         document.getElementById('pm-title').innerHTML = titleEl ? titleEl.innerHTML : '';
@@ -1138,12 +1620,16 @@
         const roleEl = item.querySelector('.role');
         document.getElementById('pm-role').textContent = roleEl ? roleEl.textContent.trim() : '';
 
-        // Body text
+        // Body text — prefer long description from data store
         const pmText = document.getElementById('pm-text');
         pmText.innerHTML = '';
-        item.querySelectorAll('.project-detail-body > p, .project-detail-body > ul').forEach((el) => {
-          pmText.appendChild(el.cloneNode(true));
-        });
+        if (pnKey && typeof pmDetailsMap !== 'undefined' && pmDetailsMap[pnKey]) {
+          pmText.innerHTML = pmDetailsMap[pnKey];
+        } else {
+          item.querySelectorAll('.project-detail-body > p, .project-detail-body > ul').forEach((el) => {
+            pmText.appendChild(el.cloneNode(true));
+          });
+        }
 
         // Tags
         const tagsEl = item.querySelector('.project-detail-tags');
@@ -1156,33 +1642,34 @@
           pmActions.appendChild(a.cloneNode(true));
         });
 
-        // Image / video / canvas
-        const imgWrap = document.getElementById('pm-img');
-        imgWrap.innerHTML = '';
-        imgWrap.className = 'pm-img';
-        const imgEl   = item.querySelector('.project-detail-img img');
-        const videoEl = item.querySelector('.project-detail-img video');
-        const cvs     = item.querySelector('#lbm-canvas');
-        if (cvs && cvs.width > 0) {
-          // Snapshot the live LBM canvas
-          const snap = document.createElement('img');
-          snap.src = cvs.toDataURL();
-          imgWrap.appendChild(snap);
-        } else if (imgEl) {
-          const clone = imgEl.cloneNode(true);
-          clone.loading = 'eager';
-          if ((imgEl.style.objectFit || '').includes('contain')) imgWrap.classList.add('contain');
-          imgWrap.appendChild(clone);
-        } else if (videoEl) {
-          const clone = videoEl.cloneNode(true);
-          clone.autoplay = true; clone.muted = true; clone.loop = true;
-          imgWrap.appendChild(clone);
+        // Build gallery
+        gallery = [];
+        galIdx  = 0;
+
+        if (pnKey && typeof pmGalleryMap !== 'undefined' && pmGalleryMap[pnKey]) {
+          gallery = pmGalleryMap[pnKey];
         } else {
-          const ph = item.querySelector('.project-detail-img');
-          imgWrap.classList.add('placeholder');
-          imgWrap.textContent = ph ? ph.textContent.trim() : '';
+          // Fallback: canvas snapshot → accordion image → placeholder
+          const cvs = item.querySelector('#lbm-canvas') || item.querySelector('#cavity-canvas');
+          if (cvs && cvs.dataset.ready === '1') {
+            gallery = [{ src: cvs.toDataURL(), alt: 'Simulation snapshot' }];
+          } else {
+            const imgEl   = item.querySelector('.project-detail-img img');
+            const videoEl = item.querySelector('.project-detail-img video');
+            const phEl    = item.querySelector('.project-detail-img');
+            if (imgEl) {
+              gallery = [{ src: imgEl.src, alt: imgEl.alt,
+                contain: (imgEl.style.objectFit || '').includes('contain') }];
+            } else if (videoEl) {
+              gallery = [{ src: videoEl.src || videoEl.querySelector('source')?.src,
+                alt: '', isVideo: true }];
+            } else {
+              gallery = [{ placeholder: phEl ? phEl.textContent.trim() : '' }];
+            }
+          }
         }
 
+        renderMedia();
         modal.hidden = false;
         document.body.style.overflow = 'hidden';
       }
@@ -1194,7 +1681,12 @@
 
       closeBtn.addEventListener('click', closeModal);
       backdrop.addEventListener('click', closeModal);
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+      document.addEventListener('keydown', (e) => {
+        if (modal.hidden) return;
+        if (e.key === 'Escape') closeModal();
+        if (e.key === 'ArrowLeft'  && gallery.length > 1) { galIdx = (galIdx - 1 + gallery.length) % gallery.length; renderMedia(); }
+        if (e.key === 'ArrowRight' && gallery.length > 1) { galIdx = (galIdx + 1) % gallery.length; renderMedia(); }
+      });
     })();
   </script>
 
@@ -1219,6 +1711,7 @@
           canvas.height = H;
           solver = new LBMSolver(canvas, W, H);
           solver.render();
+          canvas.dataset.ready = '1';
           bindControls();
         }, 150);
       }
@@ -1271,6 +1764,94 @@
         setTimeout(() => {
           if (lbmItem.classList.contains('open')) {
             initLBM();
+          } else {
+            if (solver) { solver.running = false; cancelAnimationFrame(animId); }
+          }
+        }, 50);
+      });
+    })();
+  </script>
+
+  <script src="lbm/lbm-cavity.js"></script>
+  <script>
+    // Cavity LBM — lazy init on accordion open
+    (function () {
+      const GRID_SIZE = 150;
+      const STEPS = 4;
+      let solver = null;
+      let animId = null;
+
+      function initCavity() {
+        if (solver) return;
+        const canvas = document.getElementById('cavity-canvas');
+        if (!canvas) return;
+        setTimeout(() => {
+          const rect = canvas.getBoundingClientRect();
+          const side = Math.max(200, Math.round(Math.min(rect.width, rect.height)));
+          canvas.width  = side;
+          canvas.height = side;
+          solver = new LBMCavity(canvas, GRID_SIZE);
+          solver.render();
+          canvas.dataset.ready = '1';
+          bindCavityControls();
+          updateRe();
+        }, 150);
+      }
+
+      function updateRe() {
+        const reEl = document.getElementById('cavity-re-val');
+        if (reEl && solver) {
+          reEl.textContent = Math.round(solver.lidVelocity * solver.size / solver.viscosity);
+        }
+      }
+
+      function bindCavityControls() {
+        const vel        = document.getElementById('cavity-vel');
+        const visc       = document.getElementById('cavity-visc');
+        const display    = document.getElementById('cavity-display');
+        const streamlines = document.getElementById('cavity-streamlines');
+        const startBtn   = document.getElementById('cavity-start-btn');
+        const resetBtn   = document.getElementById('cavity-reset-btn');
+
+        if (vel) vel.addEventListener('input', () => {
+          solver.setLidVelocity(parseFloat(vel.value));
+          document.getElementById('cavity-vel-val').textContent = parseFloat(vel.value).toFixed(2);
+          updateRe();
+        });
+        if (visc) visc.addEventListener('input', () => {
+          solver.setViscosity(parseFloat(visc.value));
+          document.getElementById('cavity-visc-val').textContent = parseFloat(visc.value).toFixed(3);
+          updateRe();
+        });
+        if (display) display.addEventListener('change', () => solver.setVisualization(display.value));
+        if (streamlines) streamlines.addEventListener('change', () => solver.toggleStreamlines(streamlines.checked));
+
+        if (startBtn) startBtn.addEventListener('click', () => {
+          solver.running = !solver.running;
+          startBtn.textContent = solver.running ? 'Pause' : 'Start';
+          if (solver.running) cavityLoop();
+        });
+        if (resetBtn) resetBtn.addEventListener('click', () => {
+          solver.running = false;
+          if (startBtn) startBtn.textContent = 'Start';
+          cancelAnimationFrame(animId);
+          solver.reset(); solver.render();
+        });
+      }
+
+      function cavityLoop() {
+        if (!solver || !solver.running) return;
+        for (let i = 0; i < STEPS; i++) solver.step();
+        solver.render();
+        animId = requestAnimationFrame(cavityLoop);
+      }
+
+      const cavityItem = document.getElementById('project-item-cavity');
+      if (!cavityItem) return;
+      cavityItem.querySelector('.project-row').addEventListener('click', () => {
+        setTimeout(() => {
+          if (cavityItem.classList.contains('open')) {
+            initCavity();
           } else {
             if (solver) { solver.running = false; cancelAnimationFrame(animId); }
           }

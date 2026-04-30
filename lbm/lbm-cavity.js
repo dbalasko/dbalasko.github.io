@@ -262,16 +262,16 @@ class LBMCavity {
 
     // Compute visualization values
     if (this.visualMode === 'velocity') {
-      for (let i = 0; i < this.size; i++) {
-        for (let j = 0; j < this.size; j++) {
+      for (let j = 0; j < this.size; j++) {
+        for (let i = 0; i < this.size; i++) {
           const speed = Math.sqrt(this.ux[i][j] ** 2 + this.uy[i][j] ** 2);
           values.push(speed);
           if (speed > maxVal) maxVal = speed;
         }
       }
     } else if (this.visualMode === 'vorticity') {
-      for (let i = 1; i < this.size - 1; i++) {
-        for (let j = 1; j < this.size - 1; j++) {
+      for (let j = 1; j < this.size - 1; j++) {
+        for (let i = 1; i < this.size - 1; i++) {
           const duydx = (this.uy[i+1][j] - this.uy[i-1][j]) / 2;
           const duxdy = (this.ux[i][j+1] - this.ux[i][j-1]) / 2;
           const vort = Math.abs(duydx - duxdy);
@@ -280,8 +280,8 @@ class LBMCavity {
         }
       }
     } else if (this.visualMode === 'pressure') {
-      for (let i = 0; i < this.size; i++) {
-        for (let j = 0; j < this.size; j++) {
+      for (let j = 0; j < this.size; j++) {
+        for (let i = 0; i < this.size; i++) {
           const p = this.rho[i][j] / 3;
           values.push(p);
           if (p > maxVal) maxVal = p;
