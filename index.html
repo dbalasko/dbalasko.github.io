@@ -1,307 +1,1282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>CFD Portfolio – Dominik Balasko</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="description"
-    content="Portfolio of CFD projects, simulations, and aerodynamic studies by Dominik Balasko."
-  />
-
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dominik Balasko — CFD & Aerodynamics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=10" />
 </head>
 <body>
-  <div class="page">
-    <!-- Navbar -->
-    <header class="navbar">
-      <div class="container navbar-inner">
-        <a href="#top" class="brand">
-          <div class="brand-mark">
-            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" class="brand-logo">
-              <!-- Streamlines flowing around airfoil -->
-              <path d="M4 12 Q12 10, 20 12 Q28 14, 36 12" stroke="url(#flow1)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
-              <path d="M4 18 Q10 16, 16 18 Q22 20, 28 18 Q34 16, 38 18" stroke="url(#flow1)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.8"/>
-              <path d="M4 24 Q12 26, 20 24 Q28 22, 36 24" stroke="url(#flow1)" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
-              <!-- Central airfoil shape -->
-              <path d="M8 20 Q12 14, 24 16 Q32 17, 34 20 Q32 23, 24 24 Q12 26, 8 20 Z" fill="url(#airfoil)" stroke="url(#flow1)" stroke-width="0.5"/>
-              <!-- Velocity vectors -->
-              <path d="M6 14 L10 14" stroke="#00d4ff" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-              <path d="M6 26 L10 26" stroke="#00d4ff" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-              <!-- Gradients -->
-              <defs>
-                <linearGradient id="flow1" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#00d4ff"/>
-                  <stop offset="100%" stop-color="#7c3aed"/>
-                </linearGradient>
-                <linearGradient id="airfoil" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#0a0e1a"/>
-                  <stop offset="100%" stop-color="#1a1f2e"/>
-                </linearGradient>
-              </defs>
-            </svg>
+  <canvas id="streamlines"></canvas>
+
+  <!-- Nav -->
+  <nav class="nav" data-screen-label="Nav">
+    <span class="nav-brand">Dominik Balasko</span>
+    <a href="#about">About</a>
+    <a href="#work">Work</a>
+    <a href="#projects">Projects</a>
+    <a href="#writing">Writing</a>
+    <a href="#contact" class="nav-cta">Contact</a>
+  </nav>
+
+  <main>
+
+    <!-- =================== HERO =================== -->
+    <section class="hero" id="top" data-screen-label="01 Hero">
+      <div class="container hero-inner">
+        <span class="hero-eyebrow mono">Computational Fluid Dynamics · Munich</span>
+        <h1 class="hero-title">
+          Simulating flow,<br>
+          <em>driving design.</em>
+        </h1>
+        <p class="hero-sub">
+          I'm <strong>Dominik Balasko</strong> — a CFD engineer working on
+          aerodynamics, turbulence modeling, and simulation-driven design.
+          I build robust CFD setups that produce decision-ready data.
+        </p>
+
+        <div class="hero-row">
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a class="hero-cta primary" href="#projects">
+              View projects
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="hero-cta ghost" href="#contact">Get in touch</a>
           </div>
-          <div class="brand-text">
-            <span>Dominik Balasko</span>
-            <span>CFD &amp; Aerodynamics</span>
+
+          <div class="mono" style="text-align:right; line-height:1.6;">
+            Available Q3 2026<br>
+            <span style="color:var(--fg-mute)">TU Munich · Formula Student</span>
           </div>
-        </a>
-        <nav class="nav-links">
-          <a href="#about">About</a>
-          <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
-        </nav>
-      </div>
-    </header>
-
-    <main id="top">
-      <!-- HERO with parallax -->
-      <div class="hero-wrapper">
-        <div class="hero-bg-orbit" data-parallax-layer data-speed="-0.08"></div>
-        <div class="hero-orbit-lines" data-parallax-layer data-speed="-0.16"></div>
-
-        <section class="hero container">
-          <div class="hero-grid">
-            <div class="reveal reveal-slow">
-              <div class="hero-eyebrow">
-                <span class="hero-eyebrow-dot"></span>
-                <span>Computational Fluid Dynamics</span>
-              </div>
-              <h1 class="hero-title">
-                Simulating flow,
-                <span>driving design decisions.</span>
-              </h1>
-              <p class="hero-subtitle">
-                I’m <strong>Dominik Balasko</strong>, a CFD engineer focused on
-                aerodynamics, turbulence modeling, and simulation-driven design.
-                I build robust CFD setups that produce reliable, decision-ready
-                data – not just nice streamlines.
-              </p>
-
-              <div class="hero-tags">
-                <span class="tag">RANS / URANS / LES</span>
-                <span class="tag">OpenFOAM · STAR-CCM+</span>
-                <span class="tag">Mesh, y<sup>+</sup> &amp; validation</span>
-                <span class="tag">Post-processing automation</span>
-              </div>
-
-              <div class="hero-actions">
-                <a href="#projects" class="btn btn-primary">
-                  <span>View CFD projects</span>
-                  <span class="icon">↳</span>
-                </a>
-                <a href="#contact" class="btn btn-ghost">
-                  <span>Get in touch</span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Parallax hero image -->
-            <aside class="hero-visual reveal" aria-hidden="true">
-              <div class="hero-parallax-layer" data-parallax-layer data-speed="0.15"></div>
-              <div class="hero-img-frame" data-parallax-img>
-                <!-- Replace src with one of your CFD plots / renders -->
-                <img
-                  src="TUfast_vortex_structure.JPG"
-                  alt="CFD visualization"
-                  class="hero-img"
-                />
-                <div class="hero-img-overlay"></div>
-              </div>
-              <div class="hero-legend">
-                <div class="hero-legend-label">Representative case</div>
-                <div class="hero-legend-title">
-                  External aerodynamics, Re = 3 × 10<sup>6</sup>
-                </div>
-                <div class="hero-legend-badges">
-                  <span class="legend-badge">URANS · k-ω SST</span>
-                  <span class="legend-badge">~36M cells</span>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </section>
-      </div>
-
-      <!-- ABOUT -->
-      <section id="about" class="container">
-        <div class="section-header">
-          <h2 class="section-title">About</h2>
-          <p class="section-caption">
-            Background, tools, and areas I enjoy working in.
-          </p>
         </div>
 
-        <article class="about-card reveal reveal-slow">
-          <div class="about-text">
-            <p>
+        <div class="hero-meta">
+          <div class="cell"><div class="k">Methods</div><div class="v">RANS · URANS · LES · DES · LBM</div></div>
+          <div class="cell"><div class="k">Software</div><div class="v">OpenFOAM · STAR-CCM+ · Fluent · ParaView</div></div>
+          <div class="cell"><div class="k">Focus</div><div class="v">External aero · Internal flows · Heat transfer</div></div>
+          <div class="cell"><div class="k">Code</div><div class="v">C++ · Python · Automation</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== CAR SCENE =================== -->
+    <section class="car-section" id="car-scene" data-screen-label="02 Pinned car scene">
+      <div class="car-stage">
+
+        <!-- Headline that stays on-screen -->
+        <div class="car-headline">
+          <div class="mono">Representative case</div>
+          <h2>External <em>aerodynamics</em></h2>
+        </div>
+
+        <!-- The car (Three.js renders into this element) -->
+        <div class="car-three"></div>
+        <div class="car-wrap" hidden aria-hidden="true" style="display:none">
+          <svg class="car-svg" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="carBody" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="rgba(230,240,255,0.85)"/>
+                <stop offset="100%" stop-color="rgba(160,190,220,0.35)"/>
+              </linearGradient>
+              <linearGradient id="shadow" x1="0.5" y1="0" x2="0.5" y2="1">
+                <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,0.4)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Ground shadow -->
+            <ellipse cx="400" cy="370" rx="280" ry="18" fill="url(#shadow)" opacity="0.5"/>
+
+            <!-- Formula Student style open-wheel car silhouette -->
+            <!-- Rear wing -->
+            <g stroke="url(#carBody)" stroke-width="1.4" fill="none" opacity="0.95">
+              <path d="M80 210 L180 200 L180 230 L80 240 Z"/>
+              <path d="M80 200 L180 190"/>
+              <path d="M80 240 L80 260"/>
+              <path d="M180 230 L180 260"/>
+
+              <!-- Body -->
+              <path d="M180 260 C 220 240, 280 225, 360 220 L560 220 C 620 220, 680 230, 720 260"/>
+              <path d="M180 260 C 220 290, 280 300, 360 302 L560 302 C 620 300, 680 290, 720 260"/>
+
+              <!-- Cockpit / roll hoop -->
+              <path d="M360 220 C 370 170, 430 150, 460 150 C 490 150, 540 170, 550 220"/>
+              <path d="M420 220 L440 150"/>
+              <path d="M480 150 L500 220"/>
+
+              <!-- Nose cone -->
+              <path d="M720 260 L780 264 L780 284 L720 288"/>
+
+              <!-- Front wing -->
+              <path d="M780 270 L720 285 L720 300 L780 295 Z"/>
+              <path d="M780 280 L720 292"/>
+
+              <!-- Rear tyre -->
+              <circle cx="200" cy="320" r="46"/>
+              <circle cx="200" cy="320" r="24"/>
+              <path d="M154 320 L246 320"/>
+              <path d="M200 274 L200 366"/>
+
+              <!-- Front tyre -->
+              <circle cx="660" cy="320" r="40"/>
+              <circle cx="660" cy="320" r="20"/>
+              <path d="M620 320 L700 320"/>
+
+              <!-- Side pod / intake -->
+              <path d="M280 260 L280 302 M320 260 L320 302"/>
+              <path d="M260 260 L260 302"/>
+              <!-- Floor edge -->
+              <path d="M200 320 L660 320" stroke-dasharray="4 4" opacity="0.5"/>
+
+              <!-- Hash marks (cross-section hints) -->
+              <g opacity="0.35">
+                <path d="M380 220 L380 302"/>
+                <path d="M420 220 L420 302"/>
+                <path d="M460 220 L460 302"/>
+                <path d="M500 220 L500 302"/>
+                <path d="M540 220 L540 302"/>
+              </g>
+            </g>
+
+            <!-- Reference axes (bottom-left) -->
+            <g transform="translate(60 400)" stroke="rgba(255,255,255,0.5)" fill="none">
+              <path d="M0 0 L30 0" stroke="#ff7a7a"/>
+              <path d="M0 0 L0 -30" stroke="#7ae07a"/>
+              <circle cx="0" cy="0" r="3" fill="rgba(255,255,255,0.6)"/>
+              <text x="34" y="4" font-family="JetBrains Mono" font-size="10" fill="rgba(255,255,255,0.5)">x</text>
+              <text x="-4" y="-34" font-family="JetBrains Mono" font-size="10" fill="rgba(255,255,255,0.5)">z</text>
+            </g>
+          </svg>
+
+          <!-- Streamlines that wrap the car (become visible mid-scroll) -->
+          <svg class="car-streams" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="stream1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(120,200,255,0)"/>
+                <stop offset="30%" stop-color="rgba(120,200,255,0.9)"/>
+                <stop offset="80%" stop-color="rgba(255,170,120,0.9)"/>
+                <stop offset="100%" stop-color="rgba(255,90,90,0)"/>
+              </linearGradient>
+              <linearGradient id="stream2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(180,220,255,0)"/>
+                <stop offset="40%" stop-color="rgba(180,220,255,0.7)"/>
+                <stop offset="100%" stop-color="rgba(255,180,120,0)"/>
+              </linearGradient>
+            </defs>
+            <g fill="none" stroke="url(#stream1)" stroke-width="1.6" stroke-linecap="round">
+              <path d="M800 170 C 640 170, 600 170, 550 155 C 500 140, 440 135, 380 145 C 300 160, 220 180, 80 195"/>
+              <path d="M800 200 C 660 200, 610 200, 560 195 C 500 190, 430 200, 370 215 C 280 240, 200 250, 60 260"/>
+              <path d="M800 250 C 680 250, 640 260, 600 275 C 560 290, 490 300, 400 305 C 290 315, 190 315, 40 320"/>
+              <path d="M800 290 C 680 290, 640 295, 600 308 C 560 322, 490 332, 400 338 C 290 346, 200 350, 50 360"/>
+              <path d="M800 330 C 680 335, 600 345, 520 355 C 430 368, 340 378, 200 392"/>
+            </g>
+            <g fill="none" stroke="url(#stream2)" stroke-width="1" stroke-linecap="round" opacity="0.8">
+              <path d="M800 130 C 600 130, 520 125, 460 115 C 400 105, 340 115, 260 135 C 180 152, 100 168, 20 178"/>
+              <path d="M800 360 C 620 368, 520 380, 420 400 C 320 420, 200 428, 40 428"/>
+              <path d="M800 215 C 660 218, 600 220, 555 218 C 500 215, 450 225, 400 240 C 330 260, 240 272, 80 282"/>
+            </g>
+
+            <!-- Pressure points on body -->
+            <g opacity="0.8">
+              <circle cx="720" cy="275" r="4" fill="rgba(255,80,80,0.9)"/>
+              <circle cx="620" cy="230" r="3" fill="rgba(255,140,80,0.9)"/>
+              <circle cx="460" cy="155" r="3" fill="rgba(120,200,255,0.9)"/>
+              <circle cx="300" cy="230" r="3" fill="rgba(100,180,255,0.9)"/>
+              <circle cx="200" cy="210" r="4" fill="rgba(80,140,255,0.9)"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Info panels — reveal at scroll breakpoints -->
+        <div class="car-panel panel-tl" data-start="0.0" data-end="0.25">
+          <span class="tag">01 · Geometry</span>
+          <h4>CAD cleanup &amp; surface wrap</h4>
+          <p style="margin:8px 0 0">Watertight surfaces, proper feature angles, named regions for boundary conditions.</p>
+          <ul>
+            <li><span>Patch count</span><span>184</span></li>
+            <li><span>Feature angle</span><span>35°</span></li>
+          </ul>
+        </div>
+
+        <div class="car-panel panel-tr" data-start="0.22" data-end="0.52">
+          <span class="tag">02 · External flow</span>
+          <h4>Streamlines &amp; wake</h4>
+          <p style="margin:8px 0 0">k-ω SST resolves adverse pressure gradients along the floor and captures rear-wing tip vortices.</p>
+          <ul>
+            <li><span>Re</span><span>3.0 × 10⁶</span></li>
+            <li><span>y⁺ (mean)</span><span>0.9</span></li>
+            <li><span>Iterations</span><span>8,400</span></li>
+          </ul>
+        </div>
+
+        <div class="car-panel panel-bl" data-start="0.48" data-end="0.78">
+          <span class="tag">03 · Mesh</span>
+          <h4>Hex-dominant · 36 M cells</h4>
+          <p style="margin:8px 0 0">Refinement regions around wings, underfloor, and wake. Prism layers capturing the boundary layer.</p>
+          <ul>
+            <li><span>Cells</span><span>36,200,000</span></li>
+            <li><span>Prism layers</span><span>18</span></li>
+            <li><span>Max skewness</span><span>0.62</span></li>
+          </ul>
+        </div>
+
+        <div class="car-panel panel-br" data-start="0.72" data-end="1.0">
+          <span class="tag">04 · Results</span>
+          <h4>Forces &amp; pressure field</h4>
+          <p style="margin:8px 0 0">Validated against wind-tunnel reference; balance between downforce and drag quantified per component.</p>
+          <ul>
+            <li><span>Cd</span><span>0.81</span></li>
+            <li><span>Cl (down)</span><span>−3.14</span></li>
+            <li><span>L/D</span><span>3.88</span></li>
+          </ul>
+        </div>
+
+        <!-- Progress rail -->
+        <div class="car-progress">
+          <span class="car-progress-label">01 / 04 · GEOMETRY</span>
+          <div class="car-progress-track"><div class="car-progress-fill"></div></div>
+          <span>Scroll</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== ABOUT =================== -->
+    <section id="about" data-screen-label="03 About">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="num">01 — About</span>
+          <h2>Physics, numerics,<br><em>and the decisions</em> they support.</h2>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-photo" data-reveal>
+            <img src="assets/face.jpg" alt="Dominik Balasko portrait"/>
+            <div class="caption">
+              <span>Dominik Balasko</span>
+              <span>Munich · 2026</span>
+            </div>
+          </div>
+
+          <div class="about-copy" data-reveal>
+            <p class="lead">
               I specialize in setting up, running, and post-processing CFD
-              simulations for aerodynamic and internal flow applications. My work
-              ranges from quick design loops to higher-fidelity transient
-              studies, typically benchmarked against experiments or reference
-              data.
+              for aerodynamic and internal-flow applications.
             </p>
             <p>
-              I handle the full workflow: geometry cleanup, meshing strategy,
-              turbulence model selection, numerical setup, and critical
-              evaluation of convergence and uncertainty. I enjoy connecting the
-              physics, numerics, and practical constraints behind each result.
+              My work spans quick design loops to higher-fidelity transient studies,
+              typically benchmarked against experiments or reference data. I handle the
+              <strong>full workflow</strong> — geometry cleanup, meshing strategy,
+              turbulence model selection, numerical setup, and critical evaluation of
+              convergence and uncertainty.
             </p>
             <p>
-              Recently I’ve focused on turbulence modeling, mesh independence,
-              and how numerical choices impact forces, pressure losses, and
-              temperature fields that matter to engineers.
+              Recently I've focused on turbulence modeling, mesh independence, and how
+              numerical choices impact the forces, pressure losses, and temperature
+              fields engineers actually need.
             </p>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <aside class="about-meta">
-            <div class="meta-item">
-              <div class="meta-label">Software</div>
-              <span class="meta-value">OpenFOAM, STAR-CCM+,Ansys CFX, Ansys FLuent, ultraFluid, ParaView, Python</span>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Focus areas</div>
-              <div class="meta-pill-row">
-                <span class="meta-pill">External aerodynamics</span>
-                <span class="meta-pill">Formula Student</span>
-                <span class="meta-pill">Internal flows</span>
-                <span class="meta-pill">Heat transfer</span>
-              </div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Methods</div>
-              <div class="meta-pill-row">
-                <span class="meta-pill">RANS (k-ω SST, k-ε)</span>
-                <span class="meta-pill">LES / DES</span>
-                <span class="meta-pill">URANS</span>
-                <span class="meta-pill">LBM</span>
-              </div>
-            </div>
-            <div class="meta-item">
-              <div class="meta-label">Extras</div>
-              <div class="meta-pill-row">
-                <span class="meta-pill">C++ / Python</span>
-                <span class="meta-pill">Post-processing scripts</span>
-                <span class="meta-pill">Report writing</span>
-              </div>
-            </div>
-          </aside>
-        </article>
-      </section>
-
-      <!-- PROJECTS -->
-      <section id="projects" class="container">
-        <div class="section-header">
-          <h2 class="section-title">CFD Projects</h2>
-          <p class="section-caption">
-            A selection of simulations, studies, and code work.
-          </p>
+    <!-- =================== SKILLS =================== -->
+    <section id="work" data-screen-label="04 Skills">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="num">02 — Toolkit</span>
+          <h2>A small set of tools,<br><em>used carefully.</em></h2>
         </div>
 
-        <div class="projects-filters reveal" id="projects-filters">
-          <button class="filter-chip active" type="button">All</button>
-          <button class="filter-chip" type="button">External aero</button>
-          <button class="filter-chip" type="button">Internal flows</button>
-          <button class="filter-chip" type="button">LES / transient</button>
-          <button class="filter-chip" type="button">Code / tools</button>
-        </div>
-
-        <!-- Projects are dynamically loaded from projects/*.js files -->
-        <div class="projects-grid" id="projects-grid"></div>
-      </section>
-
-      <!-- CONTACT -->
-      <section id="contact" class="container">
-        <div class="section-header">
-          <h2 class="section-title">Contact</h2>
-          <p class="section-caption">
-            Collaboration, questions, or just to talk about CFD.
-          </p>
-        </div>
-
-        <div class="contact-card reveal reveal-slow">
-          <div class="contact-text">
-            <p>
-              If you’re working on projects involving aerodynamics, internal
-              flows, or CFD workflows, feel free to reach out. I’m open to
-              collaboration, or simply exchanging ideas about
-              modeling strategies and best practices.
-            </p>
+        <div class="skills-grid" data-reveal>
+          <div class="skill-cell">
+            <span class="title">Software</span>
+            <div class="list">
+              <span>OpenFOAM</span>
+              <span>STAR-CCM+</span>
+              <span>Ansys <em>Fluent · CFX</em></span>
+              <span>ParaView</span>
+            </div>
           </div>
-          <div class="contact-rows">
-            <div>
-              <div class="contact-row-label">Email</div>
-              <div class="contact-row-value">
-                <a href="mailto:balasko.dominik@gmail.com">balasko.dominik@gmail.com</a>
-              </div>
-              <div class="contact-row-value">
-                <a href="mailto:dominik.balasko@tum.de">dominik.balasko@tum.de</a>
-              </div>
+          <div class="skill-cell">
+            <span class="title">Turbulence</span>
+            <div class="list">
+              <span>k-ω SST</span>
+              <span>k-ε <em>realizable</em></span>
+              <span>LES · DES</span>
+              <span>URANS · LBM</span>
             </div>
-            <div>
-              <div class="contact-row-label">LinkedIn</div>
-              <div class="contact-row-value">
-                <a href="https://linkedin.com/in/dominik-balasko" target="_blank" rel="noreferrer">
-                  linkedin.com/in/dominik-balasko
-                </a>
-              </div>
+          </div>
+          <div class="skill-cell">
+            <span class="title">Focus areas</span>
+            <div class="list">
+              <span>External <em>aero</em></span>
+              <span>Formula Student</span>
+              <span>Internal flows</span>
+              <span>Heat transfer</span>
             </div>
-            <div>
-              <div class="contact-row-label">GitHub / Code</div>
-              <div class="contact-row-value">
-                <a href="https://github.com/dbalasko" target="_blank" rel="noreferrer">
-                  github.com/dbalasko
-                </a>
-              </div>
+          </div>
+          <div class="skill-cell">
+            <span class="title">Code</span>
+            <div class="list">
+              <span>C++</span>
+              <span>Python</span>
+              <span>Post-processing <em>automation</em></span>
+              <span>Report writing</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- FOOTER -->
-      <footer class="container">
-        <div class="footer-inner">
-          <span>© <span id="year"></span> Dominik Balasko. All rights reserved.</span>
-          <span>Built with HTML, CSS &amp; a bit of JS.</span>
+    <!-- =================== FEATURED PROJECTS =================== -->
+    <section id="projects" data-screen-label="05 Featured">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="num">03 — Featured work</span>
+          <h2>Selected studies,<br><em>from brief to decision.</em></h2>
         </div>
-      </footer>
-    </main>
+
+        <div class="featured">
+          <a class="feature-card c1 wide" href="https://doi.org/10.1115/1.4069995" target="_blank" rel="noopener" data-reveal>
+            <div class="bg"></div>
+            <svg class="viz" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+              <g fill="none" stroke="rgba(180,220,255,0.45)" stroke-width="1">
+                <path d="M0 140 C 250 140, 400 150, 550 200 C 680 250, 820 260, 1200 240"/>
+                <path d="M0 190 C 280 190, 400 210, 560 265 C 700 320, 850 320, 1200 300"/>
+                <path d="M0 260 C 280 260, 430 280, 600 330 C 760 380, 900 380, 1200 370"/>
+                <path d="M0 340 C 300 340, 460 360, 620 400 C 780 440, 940 440, 1200 440"/>
+                <path d="M0 430 C 320 430, 480 450, 640 470 C 800 490, 980 500, 1200 510"/>
+              </g>
+              <g fill="rgba(255,170,120,0.18)" stroke="rgba(255,170,120,0.6)">
+                <ellipse cx="580" cy="360" rx="120" ry="46"/>
+                <ellipse cx="720" cy="370" rx="80" ry="28"/>
+              </g>
+            </svg>
+            <div class="content top">
+              <span class="tag">Published · ASME J. Fluids Eng.</span>
+              <h3>Aerodynamics of a <em>cornering Formula Student car</em></h3>
+              <p>Peer-reviewed CFD study of yaw and roll effects on downforce distribution, wake asymmetry, and aerodynamic load imbalance during cornering.</p>
+            </div>
+            <div class="footer">
+              <div class="stats">
+                <div><span>Type</span>Paper</div>
+                <div><span>Venue</span>ASME JFE</div>
+                <div><span>Method</span>RANS</div>
+                <div><span>Year</span>2024</div>
+              </div>
+              <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+            </div>
+          </a>
+
+          <a class="feature-card c2" href="https://www.linkedin.com/posts/dominik-balasko_formula1-aerodynamics-cfd-activity-7432696163696443392-KOuh" target="_blank" rel="noopener" data-reveal>
+            <div class="bg"></div>
+            <svg class="viz" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
+              <g stroke="rgba(255,180,120,0.5)" fill="none" stroke-width="1">
+                <circle cx="300" cy="380" r="80"/>
+                <circle cx="300" cy="380" r="140"/>
+                <circle cx="300" cy="380" r="200"/>
+                <circle cx="300" cy="380" r="260"/>
+              </g>
+              <g stroke="rgba(255,120,80,0.6)" stroke-width="1" fill="none">
+                <path d="M60 380 Q 300 80 540 380"/>
+                <path d="M60 380 Q 300 680 540 380"/>
+              </g>
+            </svg>
+            <div class="content top">
+              <span class="tag">Analytical · F1</span>
+              <h3>Ferrari's <em>"Macarena Wing"</em> — 180° rotating rear wing</h3>
+            </div>
+            <div class="footer">
+              <div class="stats">
+                <div><span>Gain</span>8–10 km/h</div>
+                <div><span>Risk</span>Resonance</div>
+              </div>
+              <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+            </div>
+          </a>
+
+          <a class="feature-card c3" href="https://www.linkedin.com/posts/dominik-balasko_f1-formula1-aerodynamics-activity-7426890258660667392-nkJk" target="_blank" rel="noopener" data-reveal>
+            <div class="bg"></div>
+            <svg class="viz" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
+              <g stroke="rgba(150,240,200,0.45)" fill="none" stroke-width="1">
+                <path d="M60 380 C 200 380, 280 360, 340 320 C 400 280, 460 270, 540 280" stroke-width="1.4"/>
+                <path d="M60 410 C 200 410, 280 400, 340 380 C 400 360, 460 360, 540 370"/>
+                <path d="M60 350 C 200 350, 280 340, 340 310 C 400 280, 460 280, 540 290" opacity="0.6"/>
+              </g>
+              <g stroke="rgba(120,240,180,0.7)" stroke-width="1.2" fill="none">
+                <rect x="180" y="220" width="240" height="14" rx="2"/>
+                <rect x="200" y="240" width="200" height="10" rx="2"/>
+              </g>
+            </svg>
+            <div class="content top">
+              <span class="tag">LES · Transient</span>
+              <h3>Alpine F1 DRS philosophy <em>— hysteresis &amp; transient stability</em></h3>
+            </div>
+            <div class="footer">
+              <div class="stats">
+                <div><span>Solver</span>STAR-CCM+</div>
+                <div><span>SGS</span>WALE</div>
+              </div>
+              <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+            </div>
+          </a>
+
+          <a class="feature-card c4" href="https://github.com/dbalasko/OpenFOAM_SISM" target="_blank" rel="noopener" data-reveal>
+            <div class="bg"></div>
+            <svg class="viz" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice">
+              <g stroke="rgba(220,180,255,0.5)" fill="none" stroke-width="1" font-family="JetBrains Mono" font-size="22">
+                <text x="100" y="280" fill="rgba(220,180,255,0.55)">νT = (Cs Δ)²</text>
+                <text x="100" y="320" fill="rgba(220,180,255,0.55)">( |S̄| − |⟨S̄⟩| )</text>
+                <path d="M80 360 L520 360" stroke-dasharray="3 4" opacity="0.5"/>
+                <path d="M80 400 L520 400" stroke-dasharray="3 4" opacity="0.4"/>
+              </g>
+            </svg>
+            <div class="content top">
+              <span class="tag">Code · OpenFOAM C++</span>
+              <h3>SISM <em>— shear-improved Smagorinsky</em> SGS model</h3>
+            </div>
+            <div class="footer">
+              <div class="stats">
+                <div><span>Target</span>OF 10</div>
+                <div><span>Type</span>SGS lib</div>
+              </div>
+              <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== ALL PROJECTS =================== -->
+    <section data-screen-label="06 All projects">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="num">04 — Archive</span>
+          <h2>Every project,<br><em>in one place.</em></h2>
+        </div>
+
+        <div class="filters" data-reveal>
+          <button class="on" data-filter="all">All</button>
+          <button data-filter="ext">External aero</button>
+          <button data-filter="int">Internal flows</button>
+          <button data-filter="les">LES / transient</button>
+          <button data-filter="code">Code / tools</button>
+        </div>
+
+        <div class="project-list" id="project-list" data-reveal>
+          <div class="project-item" data-cat="ext">
+            <button class="project-row" type="button">
+              <span class="pn">01</span>
+              <span class="ptitle">Ferrari's <em>Macarena Wing</em> — 180° rotating rear wing analysis</span>
+              <span class="pcat">External aero · F1</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Ferrari_hysteresis_plot.jpg" alt="Ferrari hysteresis plot" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">Analytical · F1 · aerodynamic &amp; structural assessment</div>
+                <p>Engineering analysis of Ferrari's rotating rear wing concept that flips 180° for straight-line speed. At ~90° rotation the wing presents maximum frontal area, creating a transient drag spike with strong vortex shedding — a sweeping excitation spectrum that risks crossing structural natural frequencies during braking.</p>
+                <p>The structural mass needed to survive the oscillatory loads raises the rear CoG, hurting cornering balance. A circuit-specific weapon: 8–10 km/h gain at Monza, a liability at Suzuka.</p>
+                <div class="project-detail-tags"><span>F1</span><span>Rear wing</span><span>Vortex shedding</span><span>Aeroelastics</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://www.linkedin.com/posts/dominik-balasko_formula1-aerodynamics-cfd-activity-7432696163696443392-KOuh" target="_blank" rel="noopener">LinkedIn post →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="project-item" data-cat="ext">
+            <button class="project-row" type="button">
+              <span class="pn">02</span>
+              <span class="ptitle">Alpine F1 DRS philosophy <em>— transient LES &amp; hysteresis</em></span>
+              <span class="pcat">External aero · LES</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Alpine_plot.png" alt="Alpine DRS hysteresis" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">STAR-CCM+ · transient LES · WMLES (WALE)</div>
+                <p>Side-by-side LES comparison of two F1 rear-wing DRS concepts: conventional rear-hinged versus Alpine's front-hinged flap. Identical 2-element wing (NACA 4415 + S1223) with overset mesh capturing the opening and closure motion.</p>
+                <p>Both achieve nearly identical drag reduction, but Alpine's design produces opposing hysteresis — higher lift during closure — favouring predictable transient behaviour and driver confidence over peak DRS gain.</p>
+                <div class="project-detail-tags"><span>LES</span><span>F1</span><span>DRS</span><span>Overset mesh</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://www.linkedin.com/posts/dominik-balasko_f1-formula1-aerodynamics-activity-7426890258660667392-nkJk" target="_blank" rel="noopener">LinkedIn post →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">03</span>
+              <span class="ptitle">SISM — <em>shear-improved Smagorinsky</em> SGS model for OpenFOAM 10</span>
+              <span class="pcat">Code · OpenFOAM C++</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/openfoam-logo.svg" alt="OpenFOAM" loading="lazy" style="object-fit:contain; padding:24px;"/></div>
+              <div class="project-detail-body">
+                <div class="role">Custom LES subgrid-scale library · Lévêque et al. 2007</div>
+                <p>Drop-in SGS model for OpenFOAM 10. Subtracts the mean strain rate from the instantaneous one before computing eddy viscosity — naturally damps SGS dissipation near walls without van Driest, recovers standard Smagorinsky in isotropic turbulence, and captures laminar-to-turbulent transition cleanly.</p>
+                <p>Validated against DNS data for channel flow at Re<sub>τ</sub> = 395 and 590.</p>
+                <div class="project-detail-tags"><span>LES</span><span>OpenFOAM</span><span>C++</span><span>SGS model</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://github.com/dbalasko/OpenFOAM_SISM" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">04</span>
+              <span class="ptitle">Reichardt wall function <em>— continuous ν<sub>t</sub> BC</em> for OpenFOAM 10</span>
+              <span class="pcat">Code · OpenFOAM C++</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/openfoam-logo.svg" alt="OpenFOAM" loading="lazy" style="object-fit:contain; padding:24px;"/></div>
+              <div class="project-detail-body">
+                <div class="role">Custom nutWallFunction · Reichardt (1951)</div>
+                <p>Replaces OpenFOAM's two-layer wall function with Reichardt's single continuous u<sup>+</sup> profile — valid from y<sup>+</sup> = 0 through the buffer layer into the log region. Newton–Raphson recovers u<sub>τ</sub> from the implicit profile, ν<sub>t</sub> back-calculated from there.</p>
+                <p>Drop-in replacement for any RANS or hybrid LES/RANS solver, no buffer-layer discontinuity.</p>
+                <div class="project-detail-tags"><span>Wall function</span><span>RANS</span><span>OpenFOAM</span><span>C++</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://github.com/dbalasko/OpenFOAM_ReichardtsWallFunction" target="_blank" rel="noopener">GitHub →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="ext">
+            <button class="project-row" type="button">
+              <span class="pn">05</span>
+              <span class="ptitle">Aerodynamics of a <em>cornering Formula Student car</em></span>
+              <span class="pcat">External aero · Published</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/fe-25-1243_f007.png" alt="Pressure distribution under yaw" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">Lead researcher · ASME Journal of Fluids Engineering</div>
+                <p>Peer-reviewed CFD study of how cornering reshapes a Formula Student car's aerodynamics. Most studies focus on straight-line — this one quantifies yaw and roll effects on downforce distribution, wake asymmetry, and ground-effect variations.</p>
+                <p>Provides setup-relevant insights into left-right load imbalance and pressure-field changes critical for circuit (not straight-line) optimisation.</p>
+                <div class="project-detail-tags"><span>Published</span><span>External aero</span><span>Cornering</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://doi.org/10.1115/1.4069995" target="_blank" rel="noopener">View paper →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">06</span>
+              <span class="ptitle">2D unsteady CFD solver <em>— FVM in C++</em> (WIP)</span>
+              <span class="pcat">Code · C++</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img placeholder">In-house FVM solver</div>
+              <div class="project-detail-body">
+                <div class="role">In-house code · numerical implementation</div>
+                <p>2D unsteady finite-volume solver for incompressible Navier–Stokes. Staggered grid, second-order upwind and central differencing, pressure-correction loop for incompressibility.</p>
+                <p>Validated on lid-driven cavity and fully developed channel flow against literature and analytical solutions. Built to internalise how discretisation choices impact stability and accuracy.</p>
+                <div class="project-detail-tags"><span>FVM</span><span>C++</span><span>WIP</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">07</span>
+              <span class="ptitle">Automated <em>post-processing pipeline</em> — Python &amp; ParaView</span>
+              <span class="pcat">Code · Python</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/paraview-logo.webp" alt="ParaView" loading="lazy" style="object-fit:contain; padding:32px;"/></div>
+              <div class="project-detail-body">
+                <div class="role">Scripting &amp; tooling · ParaView Python API</div>
+                <p>Python tools that drive ParaView headlessly to generate plots, tables, and PDF reports across runs. Batch-processes time-series and design variants, applies predefined filters, and exports consistent figures.</p>
+                <p>Standardises the path from "results finished" to "ready-to-share report" — improving reproducibility and traceability across studies.</p>
+                <div class="project-detail-tags"><span>Automation</span><span>Python</span><span>ParaView</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" id="project-item-lbm" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">08</span>
+              <span class="ptitle">Interactive <em>D2Q9 lattice Boltzmann</em> solver — browser CFD</span>
+              <span class="pcat">Code · LBM · JS</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail project-detail--lbm">
+              <div class="project-detail-img" style="padding:0; background:#05080f;">
+                <canvas id="lbm-canvas" style="display:block; width:100%; height:100%; image-rendering:pixelated;"></canvas>
+              </div>
+              <div class="project-detail-body">
+                <div class="role">JavaScript · D2Q9 BGK · real-time visualization</div>
+                <div class="lbm-ctrl-grid">
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Geometry</span>
+                    <select id="lbm-geom" class="lbm-select">
+                      <option value="circle">Circle</option>
+                      <option value="airfoil">Airfoil (NACA 0012)</option>
+                      <option value="square">Square</option>
+                      <option value="plate">Flat plate</option>
+                      <option value="triangle">Triangle</option>
+                    </select>
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Inlet velocity · <span id="lbm-vel-val" class="lbm-val">0.10</span></span>
+                    <input type="range" id="lbm-vel" class="lbm-range" min="0.02" max="0.25" step="0.01" value="0.10">
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Viscosity · <span id="lbm-visc-val" class="lbm-val">0.020</span></span>
+                    <input type="range" id="lbm-visc" class="lbm-range" min="0.005" max="0.05" step="0.005" value="0.020">
+                  </div>
+                  <div class="lbm-ctrl-row">
+                    <span class="lbm-label">Display</span>
+                    <select id="lbm-display" class="lbm-select">
+                      <option value="velocity">Velocity magnitude</option>
+                      <option value="vorticity">Vorticity</option>
+                      <option value="pressure">Pressure / density</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="project-detail-tags" style="margin-top:12px;"><span>LBM</span><span>D2Q9</span><span>BGK</span><span>Real-time</span></div>
+                <div class="project-detail-actions">
+                  <button id="lbm-start-btn" type="button" class="lbm-action-btn">Start</button>
+                  <button id="lbm-reset-btn" type="button" class="lbm-action-btn">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="code">
+            <button class="project-row" type="button">
+              <span class="pn">09</span>
+              <span class="ptitle">Lid-driven <em>cavity flow</em> simulator — interactive benchmark</span>
+              <span class="pcat">Code · LBM</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img placeholder">Cavity benchmark</div>
+              <div class="project-detail-body">
+                <div class="role">CFD validation case · D2Q9 LBM</div>
+                <p>Classic CFD benchmark — square cavity with a moving top wall driving recirculation inside. D2Q9 LBM with BGK collision, push streaming, moving-lid BC with velocity correction.</p>
+                <p>Adjustable Re reveals the flow physics: a single primary vortex at low Re, secondary corner vortices appearing as Re grows. Real-time velocity, vorticity and pressure fields.</p>
+                <div class="project-detail-tags"><span>LBM</span><span>Benchmark</span><span>Interactive</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="ext">
+            <button class="project-row" type="button">
+              <span class="pn">10</span>
+              <span class="ptitle">Supersonic <em>double-ramp flow</em> at Mach 3.8 — shock alignment</span>
+              <span class="pcat">External · Compressible</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/supersonic-ramp-pressure.jpg" alt="Total pressure showing shock structure" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">ANSYS CFX · meshing &amp; turbulence model comparison</div>
+                <p>Compressible RANS over a double ramp (α = 8°, β = 22°) at M = 3.8 — oblique shock formation, shock-shock interaction, shock–boundary-layer coupling. Comparison of inviscid Euler, k-ε and BSL EARSM.</p>
+                <p>Shock-aligned structured mesh with biexponential node distribution sharply resolved gradients and reduced numerical diffusion versus a universal grid; BSL EARSM with full BL resolution gave the cleanest shock angles.</p>
+                <div class="project-detail-tags"><span>Supersonic</span><span>Shock waves</span><span>Structured mesh</span><span>BSL EARSM</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="ext">
+            <button class="project-row" type="button">
+              <span class="pn">11</span>
+              <span class="ptitle">Adjoint <em>shape optimisation</em> — Ahmed body &amp; DrivAer fastback</span>
+              <span class="pcat">External · OpenFOAM · DAFoam</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/adjoint_DrivAer_adjoint_sensitivity.png" alt="DrivAer shape sensitivity map" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">Solver setup · FFD parameterisation · optimisation pipeline</div>
+                <p>Gradient-based aerodynamic shape optimisation with two adjoint frameworks: DAFoam (discrete) and adjointShapeOptimisation (continuous). Spalart–Allmaras turbulence, B-spline FFD morphing (8×6×8 control points), snappyHexMesh.</p>
+                <p>Drag reductions: 1.88% on Ahmed body, ~11% DrivAer (DAFoam), and up to 15.3% DrivAer with the continuous adjoint on a finer mesh.</p>
+                <div class="project-detail-tags"><span>Adjoint</span><span>Spalart–Allmaras</span><span>FFD morphing</span><span>Drag opt.</span></div>
+                <div class="project-detail-actions">
+                  <a href="https://github.com/dbalasko/DrivAer_adjoint" target="_blank" rel="noopener">DrivAer adjoint →</a>
+                  <a href="https://github.com/dbalasko/DrivAer_dafoam" target="_blank" rel="noopener">DrivAer DAFoam →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="int">
+            <button class="project-row" type="button">
+              <span class="pn">12</span>
+              <span class="ptitle">Laval nozzle <em>— inviscid compressible flow &amp; shock formation</em></span>
+              <span class="pcat">Internal · Compressible</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Laval_Ma.png" alt="Mach contours in Laval nozzle" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">ANSYS CFX · Euler · analytical validation</div>
+                <p>2D inviscid Euler simulation of a converging-diverging Laval nozzle. Investigation of choked-throat behaviour, supersonic expansion, and normal shock formation as back pressure varies.</p>
+                <p>Choked mass flow matched 1D isentropic theory to four decimals (0.035414 vs 0.035417 kg/s); peak Mach reached 3.44 at p₂ = 0.184 bar with a normal shock at exit.</p>
+                <div class="project-detail-tags"><span>Compressible</span><span>Euler</span><span>Choking</span><span>Normal shock</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="int">
+            <button class="project-row" type="button">
+              <span class="pn">13</span>
+              <span class="ptitle">Supersonic jet <em>— shock diamonds &amp; expansion fans</em></span>
+              <span class="pcat">Internal · Compressible</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Jet_p_stat_0_4_bar_Ma.png" alt="Over-expanded jet Mach contours" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">ANSYS CFX · Euler · shock-train analysis</div>
+                <p>2D inviscid simulation of over- and under-expanded supersonic jets exiting a Laval nozzle (M = 1.5). Captures the self-adjusting oblique shock train as the jet equilibrates with ambient through compression and expansion waves.</p>
+                <p>Mesh resolution study: fine grid sharpens shock fronts and recovers the analytical jump solution far better than coarse.</p>
+                <div class="project-detail-tags"><span>Oblique shocks</span><span>Expansion fan</span><span>Shock diamonds</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="int">
+            <button class="project-row" type="button">
+              <span class="pn">14</span>
+              <span class="ptitle">Rayleigh–Bénard convection <em>— buoyancy-driven instability</em></span>
+              <span class="pcat">Internal · Heat transfer</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Rayleigh_Bernard_3D_Ra_800000_streamline.png" alt="3D cavity Ra=800k streamlines" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">ANSYS CFX · Boussinesq · convection cell analysis</div>
+                <p>Natural convection in 2D periodic and 3D cavity geometries with Boussinesq buoyancy. Sweep across Ra = 500 to 800,000 captures the transition from conduction-dominated to convection-dominated transport.</p>
+                <p>Nu scales with Ra following the empirical power law; max velocity grows by ~5 orders of magnitude across the sweep, with flow becoming progressively anisotropic.</p>
+                <div class="project-detail-tags"><span>Natural convection</span><span>Boussinesq</span><span>Heat transfer</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="les">
+            <button class="project-row" type="button">
+              <span class="pn">15</span>
+              <span class="ptitle">Richtmyer–Meshkov instability <em>— shock-driven mixing</em></span>
+              <span class="pcat">Transient · Compressible</span>
+              <span class="pdate">2024</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img"><img src="assets/figs/Richtmeyer_Meshkov_SF6_mass_fraction.gif" alt="SF6 mass fraction roll-up" loading="lazy"/></div>
+              <div class="project-detail-body">
+                <div class="role">ANSYS CFX · transient compressible · numerical scheme study</div>
+                <p>Shock-interface interaction between an acetone–air mixture and SF₆. Misaligned pressure and density gradients generate baroclinic vorticity, rolling the interface into a mushroom shape and dramatically enhancing mixing.</p>
+                <p>Comparison of Upwind vs High-Resolution advection and 1st vs 2nd-order Backward Euler shows up to 5% peak pressure differences at the shock front and clearly visible diffusive smearing on the lower-order schemes.</p>
+                <div class="project-detail-tags"><span>Shock waves</span><span>Two-phase</span><span>Transient</span><span>Mixing</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-item" data-cat="les">
+            <button class="project-row" type="button">
+              <span class="pn">16</span>
+              <span class="ptitle">LES of <em>cylinder wake</em> at Re = 10<sup>5</sup> (in progress)</span>
+              <span class="pcat">LES · Transient</span>
+              <span class="pdate">2025</span>
+              <span class="parrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+            </button>
+            <div class="project-detail">
+              <div class="project-detail-img placeholder">Coming soon</div>
+              <div class="project-detail-body">
+                <div class="role">OpenFOAM · LES (WALE) · solver setup &amp; validation</div>
+                <p>Classic LES benchmark capturing vortex shedding and wake dynamics on a circular cylinder. WALE SGS with second-order schemes, CFL &lt; 0.5 in the shear layer, monitoring of Cd, Cl and base pressure for statistical convergence.</p>
+                <p>Predicted Strouhal number and mean drag coefficient match reference values within a few percent.</p>
+                <div class="project-detail-tags"><span>LES</span><span>WALE</span><span>Time-resolved</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== PUBLICATIONS =================== -->
+    <section id="writing" data-screen-label="07 Publications">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="num">05 — Writing</span>
+          <h2>Reports and<br><em>published work.</em></h2>
+        </div>
+
+        <div class="pubs">
+          <article class="pub" data-reveal>
+            <div class="venue">Peer-reviewed · ASME J. Fluids Eng.</div>
+            <h4>Aerodynamics of a <em>cornering Formula Student car</em></h4>
+            <p>CFD study of yaw and roll effects on downforce distribution, wake asymmetry, and aerodynamic load imbalance. Validated against reference data and experiments — published in the ASME Journal of Fluids Engineering.</p>
+            <div class="meta"><span>2024</span><span>·</span><a href="https://doi.org/10.1115/1.4069995" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">DOI 10.1115/1.4069995</a></div>
+          </article>
+          <article class="pub" data-reveal>
+            <div class="venue">Project report · TU Munich</div>
+            <h4>Adjoint shape optimisation of <em>ground vehicles with open-source tools</em></h4>
+            <p>Comparison of DAFoam (discrete) and adjointShapeOptimisation (continuous) frameworks on Ahmed body and DrivAer fastback. Up to 15.3% drag reduction on DrivAer using FFD parameterisation with B-spline morphing.</p>
+            <div class="meta"><span>2024</span><span>·</span><a href="https://github.com/dbalasko/DrivAer_adjoint" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">Report &amp; code</a></div>
+          </article>
+          <article class="pub" data-reveal>
+            <div class="venue">Project report · TU Munich</div>
+            <h4>Supersonic double-ramp flow at <em>Mach 3.8 — meshing &amp; turbulence model study</em></h4>
+            <p>Compressible RANS comparison of inviscid Euler, k-ε and BSL EARSM on shock-aligned structured grids. Investigation of oblique shock interaction and shock–boundary layer coupling.</p>
+            <div class="meta"><span>2024</span><span>·</span><span>ANSYS CFX report</span></div>
+          </article>
+          <article class="pub" data-reveal>
+            <div class="venue">Engineering write-ups · LinkedIn</div>
+            <h4>F1 aerodynamics analyses <em>— Ferrari Macarena wing &amp; Alpine DRS</em></h4>
+            <p>Public engineering deep-dives on contemporary F1 aero concepts: rotating-wing structural &amp; resonance trade-offs, and transient LES comparison of front- vs rear-hinged DRS hysteresis.</p>
+            <div class="meta"><span>2025</span><span>·</span><a href="https://www.linkedin.com/in/dominik-balasko" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">LinkedIn</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== CONTACT =================== -->
+    <section id="contact" class="contact" data-screen-label="08 Contact">
+      <div class="container" data-reveal>
+        <div class="mono">06 — Contact</div>
+        <h2>Let's talk about <em>your flow problem.</em></h2>
+
+        <div class="contact-links">
+          <a class="primary" href="mailto:balasko.dominik@gmail.com">
+            balasko.dominik@gmail.com
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="mailto:dominik.balasko@tum.de">dominik.balasko@tum.de</a>
+          <a href="https://linkedin.com/in/dominik-balasko">LinkedIn</a>
+          <a href="https://github.com/dbalasko">GitHub</a>
+        </div>
+
+        <div class="mono" style="color:var(--fg-mute); max-width:520px; margin:0 auto; line-height:1.8; text-transform:none; letter-spacing:0.04em; font-size:12px;">
+          Open to collaboration on aerodynamics, internal flows, and CFD workflows —
+          or just trading notes on modelling strategies.
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="footer">
+          <span>© 2026 Dominik Balasko</span>
+          <span>Munich · Built with HTML, CSS &amp; a little JS</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Project detail modal -->
+  <div id="project-modal" class="pm" hidden aria-modal="true" role="dialog">
+    <div class="pm-backdrop"></div>
+    <div class="pm-panel">
+      <button class="pm-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+      <div class="pm-img" id="pm-img"></div>
+      <div class="pm-body">
+        <div class="pm-role" id="pm-role"></div>
+        <h2 class="pm-title" id="pm-title"></h2>
+        <div class="pm-text" id="pm-text"></div>
+        <div class="pm-tags" id="pm-tags"></div>
+        <div class="pm-actions" id="pm-actions"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- LBM Solver: Choose one option below -->
+  <style>
+    .lbm-ctrl-grid { display:flex; flex-direction:column; gap:10px; margin:10px 0; }
+    .lbm-ctrl-row  { display:flex; flex-direction:column; gap:4px; }
+    .lbm-label { font-family:var(--mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--fg-mute); }
+    .lbm-val   { color:var(--fg-dim); font-family:var(--mono); }
+    .lbm-select {
+      background:var(--surface-2); border:1px solid var(--line); color:var(--fg);
+      padding:6px 10px; border-radius:6px; font-family:var(--sans); font-size:13px;
+      width:100%; cursor:pointer; appearance:none; -webkit-appearance:none;
+    }
+    .lbm-range { width:100%; accent-color:var(--fg); cursor:pointer; margin:2px 0; }
+    .lbm-action-btn {
+      font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+      color:var(--fg); background:none; border:none; border-bottom:1px solid var(--fg-dim);
+      padding-bottom:2px; cursor:pointer; transition:color 0.2s, border-color 0.2s;
+    }
+    .lbm-action-btn:hover { border-color:var(--fg); }
 
-  <!-- Option 1: Use WebAssembly (5-10x faster, requires compilation) -->
-  <!-- <script src="lbm/lbm-solver-wasm.js"></script>
-  <script src="lbm/lbm-solver-wasm-wrapper.js"></script> -->
+    /* LBM project detail — full-width stacked layout */
+    .project-detail--lbm {
+      grid-template-columns: 1fr !important;
+    }
+    #project-item-lbm.open .project-detail--lbm {
+      max-height: 680px;
+    }
+    .project-detail--lbm .project-detail-img {
+      aspect-ratio: unset;
+      height: 420px;
+      width: 100%;
+    }
+    .project-detail--lbm .lbm-ctrl-grid {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+    }
+    .project-detail--lbm .lbm-ctrl-row {
+      flex: 1 1 140px;
+    }
+    .project-detail--lbm .project-detail-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 24px;
+      align-items: flex-start;
+    }
+    .project-detail--lbm .role { width: 100%; }
+    .project-detail--lbm .lbm-ctrl-grid { width: 100%; }
+    .project-detail--lbm .project-detail-tags { width: 100%; margin-top: 0; }
+    .project-detail--lbm .project-detail-actions { width: 100%; }
 
-  <!-- Option 2: Use JavaScript (default, no compilation needed) -->
+    /* ── Project modal ───────────────────────────────────────── */
+    .pm {
+      position: fixed; inset: 0; z-index: 500;
+      display: flex; align-items: center; justify-content: center;
+      padding: var(--pad);
+    }
+    .pm[hidden] { display: none; }
+    .pm-backdrop {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .pm-panel {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 920px; max-height: 88vh;
+      background: var(--bg); border: 1px solid var(--line);
+      border-radius: 28px; overflow: hidden;
+      display: grid; grid-template-columns: 340px 1fr;
+      animation: pm-in 0.28s cubic-bezier(.2,.8,.2,1);
+    }
+    @keyframes pm-in {
+      from { opacity:0; transform:scale(0.96) translateY(14px); }
+      to   { opacity:1; transform:none; }
+    }
+    .pm-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--surface-2); border: 1px solid var(--line);
+      color: var(--fg); cursor: pointer; display: grid; place-items: center;
+      z-index: 3; transition: background 0.2s;
+    }
+    .pm-close:hover { background: var(--fg); color: var(--bg); }
+    .pm-close svg { width: 14px; height: 14px; stroke: currentColor; }
+    .pm-img {
+      position: relative; overflow: hidden;
+      background: var(--surface-2); border-right: 1px solid var(--line);
+    }
+    .pm-img img, .pm-img video { width:100%; height:100%; object-fit:cover; display:block; }
+    .pm-img.contain img { object-fit:contain; padding:28px; }
+    .pm-img.placeholder {
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:10px; letter-spacing:0.18em;
+      text-transform:uppercase; color:var(--fg-mute);
+    }
+    .pm-body {
+      padding: 40px 40px 36px 36px;
+      overflow-y: auto; display: flex; flex-direction: column; gap: 14px;
+    }
+    .pm-role {
+      font-family:var(--mono); font-size:10px; letter-spacing:0.16em;
+      text-transform:uppercase; color:var(--fg-mute);
+    }
+    .pm-title {
+      font-family:var(--serif); font-weight:500;
+      font-size:clamp(22px,2.4vw,32px); line-height:1.1;
+      letter-spacing:-0.025em; margin:0; color:var(--fg);
+    }
+    .pm-title em { font-style:normal; color:var(--fg-dim); }
+    .pm-text p { font-size:14px; line-height:1.68; color:var(--fg-dim); margin:0 0 10px; }
+    .pm-text ul { padding-left:18px; color:var(--fg-dim); font-size:14px; line-height:1.68; }
+    .pm-text li { margin-bottom:5px; }
+    .pm-tags { display:flex; flex-wrap:wrap; gap:6px; }
+    .pm-tags span {
+      font-family:var(--mono); font-size:10px; letter-spacing:0.08em;
+      padding:4px 9px; border:1px solid var(--line); border-radius:999px; color:var(--fg-dim);
+    }
+    .pm-actions { display:flex; gap:14px; flex-wrap:wrap; margin-top:4px; }
+    .pm-actions a {
+      font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+      color:var(--fg); text-decoration:none; border-bottom:1px solid var(--fg-dim);
+      padding-bottom:2px; transition:border-color 0.2s;
+    }
+    .pm-actions a:hover { border-color:var(--fg); }
+    .pm-open-btn {
+      font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+      color:var(--fg); background:none; border:none;
+      border-bottom:1px solid var(--fg-dim); padding-bottom:2px;
+      cursor:pointer; transition:border-color 0.2s;
+    }
+    .pm-open-btn:hover { border-color:var(--fg); }
+    @media (max-width:720px) {
+      .pm-panel { grid-template-columns:1fr; grid-template-rows:220px 1fr; }
+      .pm-img { border-right:none; border-bottom:1px solid var(--line); }
+    }
+  </style>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    window.THREE = Object.assign({}, THREE, { GLTFLoader });
+    window.dispatchEvent(new Event('three-ready'));
+  </script>
+  <script>
+    window.addEventListener('three-ready', () => {
+      const scripts = [
+        'streamlines.js?v=8',
+        'car-scene.js?v=7',
+        'reveals.js?v=7',
+        'tweaks.js?v=7'
+      ];
+      scripts.forEach((src) => {
+        const s = document.createElement('script');
+        s.src = src;
+        document.body.appendChild(s);
+      });
+    });
+  </script>
+  <script>
+    // Project filter
+    (function () {
+      const btns = document.querySelectorAll('.filters button');
+      const items = document.querySelectorAll('.project-item');
+      btns.forEach((b) => b.addEventListener('click', () => {
+        btns.forEach((x) => x.classList.remove('on'));
+        b.classList.add('on');
+        const f = b.dataset.filter;
+        items.forEach((r) => {
+          r.style.display = (f === 'all' || r.dataset.cat === f) ? '' : 'none';
+        });
+      }));
+    })();
+
+    // Project accordion — one open at a time
+    (function () {
+      const items = document.querySelectorAll('.project-item');
+      items.forEach((item) => {
+        const row = item.querySelector('.project-row');
+        if (!row) return;
+        row.addEventListener('click', () => {
+          const wasOpen = item.classList.contains('open');
+          items.forEach((other) => other.classList.remove('open'));
+          if (!wasOpen) item.classList.add('open');
+        });
+      });
+    })();
+  </script>
+  <script>
+    // Project modal
+    (function () {
+      const modal    = document.getElementById('project-modal');
+      const backdrop = modal.querySelector('.pm-backdrop');
+      const closeBtn = modal.querySelector('.pm-close');
+
+      // Inject "More →" into every project item
+      document.querySelectorAll('.project-item').forEach((item) => {
+        const body = item.querySelector('.project-detail-body');
+        if (!body) return;
+        const btn = document.createElement('button');
+        btn.className = 'pm-open-btn';
+        btn.type = 'button';
+        btn.textContent = 'More →';
+        btn.addEventListener('click', (e) => { e.stopPropagation(); openModal(item); });
+        let actions = body.querySelector('.project-detail-actions');
+        if (!actions) {
+          actions = document.createElement('div');
+          actions.className = 'project-detail-actions';
+          body.appendChild(actions);
+        }
+        actions.appendChild(btn);
+      });
+
+      function openModal(item) {
+        // Title
+        const titleEl = item.querySelector('.ptitle');
+        document.getElementById('pm-title').innerHTML = titleEl ? titleEl.innerHTML : '';
+
+        // Role
+        const roleEl = item.querySelector('.role');
+        document.getElementById('pm-role').textContent = roleEl ? roleEl.textContent.trim() : '';
+
+        // Body text
+        const pmText = document.getElementById('pm-text');
+        pmText.innerHTML = '';
+        item.querySelectorAll('.project-detail-body > p, .project-detail-body > ul').forEach((el) => {
+          pmText.appendChild(el.cloneNode(true));
+        });
+
+        // Tags
+        const tagsEl = item.querySelector('.project-detail-tags');
+        document.getElementById('pm-tags').innerHTML = tagsEl ? tagsEl.innerHTML : '';
+
+        // Action links (not the More button)
+        const pmActions = document.getElementById('pm-actions');
+        pmActions.innerHTML = '';
+        item.querySelectorAll('.project-detail-actions a').forEach((a) => {
+          pmActions.appendChild(a.cloneNode(true));
+        });
+
+        // Image / video / canvas
+        const imgWrap = document.getElementById('pm-img');
+        imgWrap.innerHTML = '';
+        imgWrap.className = 'pm-img';
+        const imgEl   = item.querySelector('.project-detail-img img');
+        const videoEl = item.querySelector('.project-detail-img video');
+        const cvs     = item.querySelector('#lbm-canvas');
+        if (cvs && cvs.width > 0) {
+          // Snapshot the live LBM canvas
+          const snap = document.createElement('img');
+          snap.src = cvs.toDataURL();
+          imgWrap.appendChild(snap);
+        } else if (imgEl) {
+          const clone = imgEl.cloneNode(true);
+          clone.loading = 'eager';
+          if ((imgEl.style.objectFit || '').includes('contain')) imgWrap.classList.add('contain');
+          imgWrap.appendChild(clone);
+        } else if (videoEl) {
+          const clone = videoEl.cloneNode(true);
+          clone.autoplay = true; clone.muted = true; clone.loop = true;
+          imgWrap.appendChild(clone);
+        } else {
+          const ph = item.querySelector('.project-detail-img');
+          imgWrap.classList.add('placeholder');
+          imgWrap.textContent = ph ? ph.textContent.trim() : '';
+        }
+
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+      }
+
+      closeBtn.addEventListener('click', closeModal);
+      backdrop.addEventListener('click', closeModal);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    })();
+  </script>
+
   <script src="lbm/lbm-solver.js"></script>
-  <script src="lbm/lbm-cavity.js"></script>
+  <script>
+    // LBM interactive — lazy init on accordion open
+    (function () {
+      let solver = null;
+      let animId  = null;
+      const STEPS = 4;
 
-  <!-- Project data files - each project in its own file for maintainability -->
-  <script src="projects/project-fs-front-wing.js"></script>
-  <script src="projects/project-cornering-fs.js"></script>
-  <script src="projects/project-cylinder-les.js"></script>
-  <script src="projects/project-intake-manifold.js"></script>
-  <script src="projects/project-2d-solver.js"></script>
-  <script src="projects/project-cooling-cht.js"></script>
-  <script src="projects/project-paraview-automation.js"></script>
-  <script src="projects/project-lbm-interactive.js"></script>
-  <script src="projects/project-cavity-flow.js"></script>
-  <script src="projects/project-supersonic-ramp.js"></script>
-  <script src="projects/project-adjoint-optimisation.js"></script>
-  <script src="projects/project-f1-drs-alpine.js"></script>
-  <script src="projects/project-laval-nozzle.js"></script>
-  <script src="projects/project-supersonic-jet.js"></script>
-  <script src="projects/project-rayleigh-benard.js"></script>
-  <script src="projects/project-richtmyer-meshkov.js"></script>
-  <script src="projects/project-sism-les-model.js"></script>
-  <script src="projects/project-reichardt-wall-function.js"></script>
-  <script src="projects/project-ferrari-macarena-wing.js"></script>
-  <script src="projects/projects-data.js"></script>
-  <script src="projects/projects-renderer.js"></script>
+      function initLBM() {
+        if (solver) return;
+        const canvas = document.getElementById('lbm-canvas');
+        if (!canvas) return;
+        // Wait for accordion max-height transition to settle
+        setTimeout(() => {
+          const rect = canvas.getBoundingClientRect();
+          const W = Math.max(160, Math.round(rect.width));
+          const H = Math.max(100, Math.round(rect.height));
+          canvas.width  = W;
+          canvas.height = H;
+          solver = new LBMSolver(canvas, W, H);
+          solver.render();
+          bindControls();
+        }, 150);
+      }
 
-  <script src="script.js"></script>
+      function bindControls() {
+        const geom    = document.getElementById('lbm-geom');
+        const vel     = document.getElementById('lbm-vel');
+        const visc    = document.getElementById('lbm-visc');
+        const display = document.getElementById('lbm-display');
+        const startBtn = document.getElementById('lbm-start-btn');
+        const resetBtn = document.getElementById('lbm-reset-btn');
+
+        if (geom) geom.addEventListener('change', () => {
+          solver.setGeometry(geom.value); solver.init();
+          if (!solver.running) solver.render();
+        });
+        if (vel) vel.addEventListener('input', () => {
+          solver.setVelocity(parseFloat(vel.value));
+          document.getElementById('lbm-vel-val').textContent = parseFloat(vel.value).toFixed(2);
+        });
+        if (visc) visc.addEventListener('input', () => {
+          solver.setViscosity(parseFloat(visc.value));
+          document.getElementById('lbm-visc-val').textContent = parseFloat(visc.value).toFixed(3);
+        });
+        if (display) display.addEventListener('change', () => solver.setVisualization(display.value));
+
+        if (startBtn) startBtn.addEventListener('click', () => {
+          solver.running = !solver.running;
+          startBtn.textContent = solver.running ? 'Pause' : 'Start';
+          if (solver.running) loop();
+        });
+        if (resetBtn) resetBtn.addEventListener('click', () => {
+          solver.running = false;
+          if (startBtn) startBtn.textContent = 'Start';
+          cancelAnimationFrame(animId);
+          solver.reset(); solver.render();
+        });
+      }
+
+      function loop() {
+        if (!solver || !solver.running) return;
+        for (let i = 0; i < STEPS; i++) solver.step();
+        solver.render();
+        animId = requestAnimationFrame(loop);
+      }
+
+      const lbmItem = document.getElementById('project-item-lbm');
+      if (!lbmItem) return;
+      lbmItem.querySelector('.project-row').addEventListener('click', () => {
+        setTimeout(() => {
+          if (lbmItem.classList.contains('open')) {
+            initLBM();
+          } else {
+            if (solver) { solver.running = false; cancelAnimationFrame(animId); }
+          }
+        }, 50);
+      });
+    })();
+  </script>
 </body>
 </html>
-
